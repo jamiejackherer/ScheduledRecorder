@@ -115,7 +115,8 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
         mRecordButton.setColorPressed(ContextCompat.getColor(getActivity(), R.color.primary_dark));
         mRecordButton.setOnClickListener(addScheduledRecordingListener);
 
-        myCalendarViewListener.onDayClick(selectedDate); // click to show current day
+        myCalendarViewListener.onDayClick(selectedDate);// click to show current day
+        calendarView.setCurrentDate(selectedDate);
 
         return v;
     }
