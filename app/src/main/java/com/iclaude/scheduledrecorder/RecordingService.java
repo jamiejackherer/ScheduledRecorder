@@ -78,7 +78,7 @@ public class RecordingService extends Service {
     /*
         Static factory method used to create an Intent to start this Service. The boolean value
         activityStarter is true if this method is called by an Activity, false otherwise (i.e.
-        Service started by an AlarmManager for a scheduled recording.
+        Service started by an AlarmManager for a scheduled recording).
     */
     public static Intent makeIntent(Context context, boolean activityStarter) {
         Intent intent = new Intent(context, RecordingService.class);

@@ -155,6 +155,8 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
             int num = recordingsDao.deleteScheduledRecordings(recordings);
 
             appExecutors.mainThread().execute(() -> {
+                if (callback == null) return;
+
                 if (num > 0)
                     callback.onSuccess();
                 else
