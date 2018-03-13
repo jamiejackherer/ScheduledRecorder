@@ -1,0 +1,12 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="SSBasedInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <replaceConfiguration name="translation description delete" text="&lt;string name=&quot;$name$&quot; translation_description=&quot;$desc$&quot;&gt;$value$&lt;/string&gt;" recursive="false" caseInsensitive="true" type="XML" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="&lt;string name=&quot;$name$&quot;&gt;$value$&lt;/string&gt;">
+        <constraint name="name" within="" contains="" />
+        <constraint name="desc" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+      </replaceConfiguration>
+    </inspection_tool>
+  </profile>
+</component>
