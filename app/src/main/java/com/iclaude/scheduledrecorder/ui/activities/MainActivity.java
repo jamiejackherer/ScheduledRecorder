@@ -1,8 +1,13 @@
 /*
+ * Copyright (c) 2018 Claudio "iClaude" Agostini <agostini.claudio1@gmail.com>
+ * Licensed under the Apache License, Version 2.0
+ */
+
+/*
  * Year: 2017. This class was edited by iClaude.
  */
 
-package com.iclaude.scheduledrecorder.activities;
+package com.iclaude.scheduledrecorder.ui.activities;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -21,10 +26,10 @@ import android.view.MenuItem;
 import com.astuetz.PagerSlidingTabStrip;
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.RecordingService;
-import com.iclaude.scheduledrecorder.fragments.LicensesFragment;
-import com.iclaude.scheduledrecorder.fragments.RecordFragment;
-import com.iclaude.scheduledrecorder.fragments.fileviewer.FileViewerFragment;
-import com.iclaude.scheduledrecorder.fragments.scheduledrecordings.ScheduledRecordingsFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.LicensesFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.RecordFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsFragment;
 
 
 public class MainActivity extends AppCompatActivity implements RecordFragment.ServiceOperations {

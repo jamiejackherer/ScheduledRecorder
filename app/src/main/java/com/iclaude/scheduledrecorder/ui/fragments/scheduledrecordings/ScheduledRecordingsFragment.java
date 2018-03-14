@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
  */
 
-package com.iclaude.scheduledrecorder.fragments.scheduledrecordings;
+package com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings;
 
 import android.Manifest;
 import android.app.Activity;
@@ -29,8 +29,8 @@ import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.ScheduledRecordingService;
-import com.iclaude.scheduledrecorder.activities.AddScheduledRecordingActivity;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
+import com.iclaude.scheduledrecorder.ui.activities.AddScheduledRecordingActivity;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.text.DateFormat;

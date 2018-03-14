@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import com.iclaude.scheduledrecorder.activities.MainActivity;
+import com.iclaude.scheduledrecorder.ui.activities.MainActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

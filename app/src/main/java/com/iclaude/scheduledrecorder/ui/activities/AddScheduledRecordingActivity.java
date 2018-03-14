@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2017 Claudio "iClaude" Agostini <agostini.claudio1@gmail.com>
+ * Copyright (c) 2018 Claudio "iClaude" Agostini <agostini.claudio1@gmail.com>
  * Licensed under the Apache License, Version 2.0
  */
 
-package com.iclaude.scheduledrecorder.activities;
+package com.iclaude.scheduledrecorder.ui.activities;
 
 import android.app.DialogFragment;
 import android.content.Context;
@@ -28,10 +28,10 @@ import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
 import com.iclaude.scheduledrecorder.didagger2.App;
-import com.iclaude.scheduledrecorder.fragments.DatePickerFragment;
-import com.iclaude.scheduledrecorder.fragments.DatePickerFragment.MyOnDateSetListener;
-import com.iclaude.scheduledrecorder.fragments.TimePickerFragment;
-import com.iclaude.scheduledrecorder.fragments.TimePickerFragment.MyOnTimeSetListener;
+import com.iclaude.scheduledrecorder.ui.fragments.DatePickerFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.DatePickerFragment.MyOnDateSetListener;
+import com.iclaude.scheduledrecorder.ui.fragments.TimePickerFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.TimePickerFragment.MyOnTimeSetListener;
 
 import java.text.DateFormat;
 import java.util.Calendar;

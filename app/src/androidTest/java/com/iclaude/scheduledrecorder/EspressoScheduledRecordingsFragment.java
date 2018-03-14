@@ -12,8 +12,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 
-import com.iclaude.scheduledrecorder.activities.AddScheduledRecordingActivity;
-import com.iclaude.scheduledrecorder.activities.MainActivity;
+import com.iclaude.scheduledrecorder.ui.activities.AddScheduledRecordingActivity;
+import com.iclaude.scheduledrecorder.ui.activities.MainActivity;
 
 import org.hamcrest.Matchers;
 import org.junit.Rule;

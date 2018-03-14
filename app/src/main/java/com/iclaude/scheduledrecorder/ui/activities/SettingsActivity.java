@@ -1,4 +1,9 @@
-package com.iclaude.scheduledrecorder.activities;
+/*
+ * Copyright (c) 2018 Claudio "iClaude" Agostini <agostini.claudio1@gmail.com>
+ * Licensed under the Apache License, Version 2.0
+ */
+
+package com.iclaude.scheduledrecorder.ui.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,7 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
 import com.iclaude.scheduledrecorder.R;
-import com.iclaude.scheduledrecorder.fragments.SettingsFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.SettingsFragment;
 
 /**
  * Created by Daniel on 5/22/2017.

@@ -7,12 +7,12 @@ package com.iclaude.scheduledrecorder.didagger2;
 
 import com.iclaude.scheduledrecorder.RecordingService;
 import com.iclaude.scheduledrecorder.ScheduledRecordingService;
-import com.iclaude.scheduledrecorder.activities.AddScheduledRecordingActivity;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
-import com.iclaude.scheduledrecorder.fragments.fileviewer.FileViewerAdapter;
-import com.iclaude.scheduledrecorder.fragments.fileviewer.FileViewerViewModel;
-import com.iclaude.scheduledrecorder.fragments.scheduledrecordings.ScheduledRecordingsFragment;
-import com.iclaude.scheduledrecorder.fragments.scheduledrecordings.ScheduledRecordingsViewModel;
+import com.iclaude.scheduledrecorder.ui.activities.AddScheduledRecordingActivity;
+import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerAdapter;
+import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerViewModel;
+import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsViewModel;
 
 import javax.inject.Singleton;
 

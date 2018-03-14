@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2017 Claudio "iClaude" Agostini <agostini.claudio1@gmail.com>
+ * Copyright (c) 2018 Claudio "iClaude" Agostini <agostini.claudio1@gmail.com>
  * Licensed under the Apache License, Version 2.0
  */
 
-package com.iclaude.scheduledrecorder.fragments;
+package com.iclaude.scheduledrecorder.ui.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

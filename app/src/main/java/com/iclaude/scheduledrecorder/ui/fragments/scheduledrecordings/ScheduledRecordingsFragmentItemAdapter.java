@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
  */
 
-package com.iclaude.scheduledrecorder.fragments.scheduledrecordings;
+package com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;

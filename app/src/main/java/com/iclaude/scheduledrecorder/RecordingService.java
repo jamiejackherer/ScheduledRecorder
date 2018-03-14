@@ -21,12 +21,12 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.iclaude.scheduledrecorder.activities.MainActivity;
 import com.iclaude.scheduledrecorder.database.Recording;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
 import com.iclaude.scheduledrecorder.didagger2.App;
+import com.iclaude.scheduledrecorder.ui.activities.MainActivity;
 import com.iclaude.scheduledrecorder.utils.Utils;
 
 import java.io.IOException;

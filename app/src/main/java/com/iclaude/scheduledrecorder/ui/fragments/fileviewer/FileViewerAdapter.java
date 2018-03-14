@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
  */
 
-package com.iclaude.scheduledrecorder.fragments.fileviewer;
+package com.iclaude.scheduledrecorder.ui.fragments.fileviewer;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -24,7 +24,7 @@ import com.iclaude.scheduledrecorder.database.Recording;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface;
 import com.iclaude.scheduledrecorder.didagger2.App;
-import com.iclaude.scheduledrecorder.fragments.PlaybackFragment;
+import com.iclaude.scheduledrecorder.ui.fragments.PlaybackFragment;
 import com.iclaude.scheduledrecorder.utils.Utils;
 
 import java.io.File;

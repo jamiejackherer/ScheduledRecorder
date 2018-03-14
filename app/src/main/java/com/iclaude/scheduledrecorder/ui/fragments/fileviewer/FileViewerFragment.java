@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
  */
 
-package com.iclaude.scheduledrecorder.fragments.fileviewer;
+package com.iclaude.scheduledrecorder.ui.fragments.fileviewer;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;

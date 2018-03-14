@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
  */
 
-package com.iclaude.scheduledrecorder.fragments.fileviewer;
+package com.iclaude.scheduledrecorder.ui.fragments.fileviewer;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
