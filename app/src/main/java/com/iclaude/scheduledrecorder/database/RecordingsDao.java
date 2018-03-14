@@ -31,7 +31,7 @@ public interface RecordingsDao {
     Recording getRecordingById(long id);
 
 
-    @Query("SELECT * FROM saved_recordings ORDER BY time_added DESC")
+    @Query("SELECT * FROM saved_recordings")
     LiveData<List<Recording>> getAllRecordings();
 
     @Query("SELECT COUNT(*) FROM saved_recordings")

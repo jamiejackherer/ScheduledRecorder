@@ -6,12 +6,14 @@
 package com.iclaude.scheduledrecorder.fragments.fileviewer;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.iclaude.scheduledrecorder.database.Recording;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.didagger2.App;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,6 +32,12 @@ public class FileViewerViewModel extends ViewModel {
     }
 
     public LiveData<List<Recording>> getRecordings() {
-        return recordingsRepository.getAllRecordings();
+        LiveData<List<Recording>> recordingsLive = recordingsRepository.getAllRecordings();
+        LiveData<List<Recording>> recordingsReverseLive = Transformations.map(recordingsLive, recordings -> {
+            Collections.reverse(recordings);
+            return recordings;
+        });
+
+        return recordingsReverseLive;
     }
 }
