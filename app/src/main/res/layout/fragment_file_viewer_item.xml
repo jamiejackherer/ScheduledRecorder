@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="com.iclaude.scheduledrecorder.utils.Utils" />
+        <variable
+            name="recording"
+            type="com.iclaude.scheduledrecorder.database.Recording" />
 
         <variable
-            name="obj"
-            type="com.iclaude.scheduledrecorder.database.Recording" />
+            name="clickCallback"
+            type="com.iclaude.scheduledrecorder.ui.fragments.fileviewer.RecordingsClickCallback" />
     </data>
 
     <LinearLayout
@@ -24,7 +26,9 @@
             android:layout_margin="5dp"
             android:foreground="?android:attr/selectableItemBackground"
             card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="3dp">
+            card_view:cardElevation="3dp"
+            android:onClick="@{() -> clickCallback.onClick(recording)}"
+            android:onLongClick="@{() -> clickCallback.onLongClick(recording)}" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,7 +58,7 @@
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:text="@{obj.name}"
+                        android:text="@{recording.name}"
                         tools:text="@tools:sample/first_names" />
 
                     <TextView
@@ -64,7 +68,7 @@
                         android:layout_marginTop="7dp"
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="12sp"
-                        android:text="@{Utils.formatDuration(obj.length)}"
+                        android:text="@{Utils.formatDuration(recording.length)}"
                         tools:text="@tools:sample/date/hhmmss" />
 
                     <TextView
@@ -73,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="12sp"
-                        android:text="@{Utils.formatDate(obj.timeAdded)}"
+                        android:text="@{Utils.formatDate(recording.timeAdded)}"
                         tools:text="@tools:sample/date/ddmmyy" />
                 </LinearLayout>
 
