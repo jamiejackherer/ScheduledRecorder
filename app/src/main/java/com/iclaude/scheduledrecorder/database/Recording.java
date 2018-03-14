@@ -8,10 +8,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 
 /**
  * Table "saved_recordings".
@@ -95,24 +91,6 @@ public class Recording implements Parcelable {
 
     public void setTimeAdded(long timeAdded) {
         this.timeAdded = timeAdded;
-    }
-
-    // Utility methods to display information about this Recording in a list.
-    @NonNull
-    public String getLengthForList() {
-        long millis = getLength();
-        String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
-                TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
-
-        return hms;
-    }
-
-    @NonNull
-    public String getTimeAddedForList() {
-        Date timeAdded = new Date(getTimeAdded());
-        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        return df.format(timeAdded);
     }
 
     // Implementation of Parcelable interface.

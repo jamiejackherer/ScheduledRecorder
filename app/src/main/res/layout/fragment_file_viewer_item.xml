@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="com.iclaude.scheduledrecorder.utils.Utils" />
+
         <variable
             name="obj"
             type="com.iclaude.scheduledrecorder.database.Recording" />
@@ -62,7 +64,7 @@
                         android:layout_marginTop="7dp"
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="12sp"
-                        android:text="@{obj.lengthForList}"
+                        android:text="@{Utils.formatDuration(obj.length)}"
                         tools:text="@tools:sample/date/hhmmss" />
 
                     <TextView
@@ -71,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="12sp"
-                        android:text="@{obj.timeAddedForList}"
+                        android:text="@{Utils.formatDate(obj.timeAdded)}"
                         tools:text="@tools:sample/date/ddmmyy" />
                 </LinearLayout>
 

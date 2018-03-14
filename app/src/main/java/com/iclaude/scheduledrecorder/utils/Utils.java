@@ -9,6 +9,9 @@ import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Common utility methods.
@@ -36,5 +39,26 @@ public class Utils {
     private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+    }
+
+    // Format date (date, time in short format).
+    public static String formatDate(long time) {
+        Date timeAdded = new Date(time);
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        return df.format(timeAdded);
+    }
+
+    // Format duration (hh:mm:ss).
+    public static String formatDuration(long duration) {
+        String hms;
+        if (TimeUnit.MILLISECONDS.toHours(duration) > 0)
+            hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(duration),
+                    TimeUnit.MILLISECONDS.toMinutes(duration) % TimeUnit.HOURS.toMinutes(1),
+                    TimeUnit.MILLISECONDS.toSeconds(duration) % TimeUnit.MINUTES.toSeconds(1));
+        else
+            hms = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration) % TimeUnit.HOURS.toMinutes(1),
+                    TimeUnit.MILLISECONDS.toSeconds(duration) % TimeUnit.MINUTES.toSeconds(1));
+
+        return hms;
     }
 }
