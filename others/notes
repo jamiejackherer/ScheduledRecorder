@@ -1,2 +1,5 @@
-things to fix:
-- ScheduledRecordingService: use Room database
+da fare:
+- cercare info su dove mettere il codice di gestione fragment nel modello mvvm
+- cercare info su testing del viewmodel
+- testare il viewmodel
+- funzione cancellazione scheduled recordings superate nel database

@@ -18,8 +18,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface.OperationResult;
-
 /**
  * ViewModel for FileViewerFragment.
  */
@@ -40,13 +38,5 @@ public class FileViewerViewModel extends ViewModel {
             Collections.reverse(recordings1);
             return recordings1;
         });
-    }
-
-    public void renameRecording(Recording recording, OperationResult callback) {
-        recordingsRepository.updateRecordings(callback, recording);
-    }
-
-    public void deleteRecording(Recording recording, OperationResult callback) {
-        recordingsRepository.deleteRecordings(callback, recording);
     }
 }
