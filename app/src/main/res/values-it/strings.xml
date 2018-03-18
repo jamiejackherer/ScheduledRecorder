@@ -21,7 +21,7 @@
     <string name="toast_scheduledrecording_timeerror_start_after_end">L\'ora iniziale della registrazione deve essere precedente all\'ora finale!</string>
     <string name="toast_scheduledrecording_timeerror_past">Non è possibile pianificare una registrazione nel passato!</string>
     <string name="toast_scheduledrecording_saved">La registrazione pianificata è stata salvata</string>
-    <string name="toast_scheduledrecording_saved_error">Errore nel salvataggio della registrazione pianificata!</string>
+    <string name="toast_scheduledrecording_saved_error">Errore nel salvataggio della registrazione pianificata. Controllare che altre registrazioni non siano pianificate nello stesso orario.</string>
     <string name="toast_scheduledrecording_timeerror_already_scheduled">Un\'altra registrazione è già pianificata per l\'orario selezionato!</string>
     <string name="toast_scheduledrecording_deleted_error">Errore nell\'eliminazione  della registrazione pianificata!</string>
     <string name="toast_scheduledrecording_deleted">Elemento cancellato con successo</string>
@@ -68,16 +68,10 @@
 
     <string name="new_message_notification_title_template">Nuovo messaggio: %1$s</string>
 
-    <!-- TODO: remove this placeholder text -->
-    <string name="new_message_notification_placeholder_text_template">You said %1$s and lorem ipsum
-        dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel
-        semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis.
-        Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper
-        ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis
-        viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec
-        tortor.
-    </string>
+    <!-- ScheduledRecordingDetailsActivity -->
+    <string name="no_data">dati non disponibili</string>
 
+    <!-- Actions -->
     <string name="action_share">Condividi</string>
     <string name="action_reply">Rispondi</string>
 

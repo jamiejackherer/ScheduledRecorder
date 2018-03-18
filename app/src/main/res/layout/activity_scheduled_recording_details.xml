@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2017. This code was written by iClaude. All rights reserved.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+        <import type="com.iclaude.scheduledrecorder.utils.Utils" />
+
+        <variable
+            name="viewModel"
+            type="com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel" />
+
+        <variable
+            name="listener"
+            type="com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.PickerListener" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@color/primary"
+            android:elevation="4dp"
+            android:theme="@style/ToolbarWhiteArrow"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+            app:srcCompat="@drawable/ic_access_time_black_24dp"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@string/image_content_description"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/act_addsched_schedule_recording"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintLeft_toRightOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+        <TextView
+            android:id="@+id/tvDateStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            tools:text="Mer 23 Ago 2017"
+            android:text="@{Utils.formatDateMedium(viewModel.scheduledRecordingObservable.start)}"
+            android:visibility="@{(viewModel.dataAvailable &amp;&amp; !viewModel.dataLoading) ? View.VISIBLE : View.GONE}"
+            android:onClick="@{(view) -> listener.showDatePickerDialog(view)}"
+            android:textColor="@{viewModel.timeStartCorrectObservable &amp;&amp; viewModel.timesCorrectObservable ? @color/primary_text : @color/red}" android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/tvDateEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/tvDateStart"
+            tools:text="Mer 23 Ago 2017"
+            android:text="@{Utils.formatDateMedium(viewModel.scheduledRecordingObservable.end)}"
+            android:visibility="@{(viewModel.dataAvailable &amp;&amp; !viewModel.dataLoading) ? View.VISIBLE : View.GONE}"
+            android:onClick="@{(view) -> listener.showDatePickerDialog(view)}"
+            android:textColor="@{viewModel.timeEndCorrectObservable ? @color/primary_text : @color/red}" android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/tvTimeStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvDateStart"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="10:00"
+            android:text="@{Utils.formatTime(viewModel.scheduledRecordingObservable.start)}"
+            android:visibility="@{(viewModel.dataAvailable &amp;&amp; !viewModel.dataLoading) ? View.VISIBLE : View.GONE}"
+            android:onClick="@{(view) -> listener.showTimePickerDialog(view)}"
+            android:textColor="@{viewModel.timeStartCorrectObservable &amp;&amp; viewModel.timesCorrectObservable ? @color/primary_text : @color/red}" android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/tvTimeEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvDateEnd"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="11:00"
+            android:text="@{Utils.formatTime(viewModel.scheduledRecordingObservable.end)}"
+            android:visibility="@{(viewModel.dataAvailable &amp;&amp; !viewModel.dataLoading) ? View.VISIBLE : View.GONE}"
+            android:onClick="@{(view) -> listener.showTimePickerDialog(view)}"
+            android:textColor="@{viewModel.timeEndCorrectObservable ? @color/primary_text : @color/red}" android:focusable="true"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:indeterminate="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            android:visibility="@{viewModel.dataLoading ? View.VISIBLE : View.GONE}"/>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/no_data"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            tools:text="@string/no_data"
+            android:visibility="@{(!viewModel.dataAvailable &amp;&amp; !viewModel.dataLoading) ? View.VISIBLE : View.GONE}"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

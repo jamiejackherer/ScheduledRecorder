@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="12sp"
-                        android:text="@{Utils.formatDate(viewModel.timeAdded)}"
+                        android:text="@{Utils.formatDateTimeShort(viewModel.timeAdded)}"
                         tools:text="@tools:sample/date/ddmmyy" />
                 </LinearLayout>
 

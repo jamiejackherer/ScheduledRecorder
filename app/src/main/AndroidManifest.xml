@@ -37,6 +37,10 @@
             android:name="com.iclaude.scheduledrecorder.ui.activities.AddScheduledRecordingActivity"
             android:label="@string/app_name"
             android:parentActivityName="com.iclaude.scheduledrecorder.ui.activities.MainActivity" />
+        <activity
+            android:name="com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.iclaude.scheduledrecorder.ui.activities.MainActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -30,7 +30,7 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
-import com.iclaude.scheduledrecorder.ui.activities.AddScheduledRecordingActivity;
+import com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsActivity;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.text.DateFormat;
@@ -66,7 +66,6 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
     private RecyclerView.Adapter adapter;
     private List<ScheduledRecording> scheduledRecordings;
     private Date selectedDate = new Date(System.currentTimeMillis());
-
 
     public static ScheduledRecordingsFragment newInstance(int position) {
         ScheduledRecordingsFragment f = new ScheduledRecordingsFragment();
@@ -167,8 +166,8 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
     // Click listener for the elements of the RecyclerView (for editing scheduled recordings).
     @Override
     public void onItemClick(ScheduledRecording item) {
-        Intent intent = AddScheduledRecordingActivity.makeIntent(getActivity(), item);
-        startActivityForResult(intent, EDIT_SCHEDULED_RECORDING);
+        Intent intent = ScheduledRecordingDetailsActivity.makeIntent(getActivity(), item.getId());
+        startActivity(intent);
     }
 
     // Long click listener for the elements of the RecyclerView (for deleting or renaming scheduled recordings).
@@ -226,7 +225,7 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
         } else if (writePerm && !audioPerm) {
             arrPermissions = new String[]{Manifest.permission.RECORD_AUDIO};
         } else {
-            startAddScheduledRecordingActivity();
+            startScheduledRecordingDetailsActivity();
             return;
         }
 
@@ -243,14 +242,14 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
         }
 
         if (granted)
-            startAddScheduledRecordingActivity();
+            startActivity(ScheduledRecordingDetailsActivity.makeIntent(getActivity(), selectedDate.getTime()));
         else
             Toast.makeText(getActivity(), getString(R.string.toast_permissions_denied), Toast.LENGTH_LONG).show();
     }
 
-    private void startAddScheduledRecordingActivity() {
-        Intent intent = AddScheduledRecordingActivity.makeIntent(getActivity(), selectedDate.getTime());
-        startActivityForResult(intent, ADD_SCHEDULED_RECORDING);
+    private void startScheduledRecordingDetailsActivity() {
+        Intent intent = ScheduledRecordingDetailsActivity.makeIntent(getActivity(), selectedDate.getTime());
+        startActivity(intent);
     }
 
     @Override

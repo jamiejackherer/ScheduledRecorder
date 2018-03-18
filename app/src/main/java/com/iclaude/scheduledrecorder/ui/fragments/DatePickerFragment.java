@@ -24,14 +24,17 @@ import java.util.Calendar;
  */
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-    private static final String VIEW_ID = "view_id";
+    private static final String EXTRA_VIEW_ID = "com.iclaude.scheduledrecorder.EXTRA_VIEW_ID";
+    private static final String EXTRA_DATE = "com.iclaude.scheduledrecorder.EXTRA_DATE";
+
 
     private MyOnDateSetListener listener;
 
-    public static DatePickerFragment newInstance(long viewId) {
+    public static DatePickerFragment newInstance(long viewId, long date) {
         DatePickerFragment f = new DatePickerFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(VIEW_ID, viewId);
+        bundle.putLong(EXTRA_VIEW_ID, viewId);
+        bundle.putLong(EXTRA_DATE, date);
         f.setArguments(bundle);
 
         return f;
@@ -39,7 +42,9 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        long date = getArguments().getLong(EXTRA_DATE);
         final Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(date);
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
@@ -74,7 +79,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         if (listener != null) {
-            listener.onDateSet(getArguments().getLong(VIEW_ID, 0), year, month, day);
+            listener.onDateSet(getArguments().getLong(EXTRA_VIEW_ID, 0), year, month, day);
         }
     }
 

@@ -26,6 +26,7 @@ import java.util.Locale;
  */
 
 public class ScheduledRecordingsFragmentItemAdapter extends RecyclerView.Adapter<ScheduledRecordingsFragmentItemAdapter.ItemViewHolder> {
+    private final String TAG = "SCHEDULED_RECORDER_TAG";
 
     public interface MyOnItemClickListener {
         void onItemClick(ScheduledRecording item);

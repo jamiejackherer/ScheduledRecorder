@@ -35,7 +35,7 @@ public interface RecordingsRepositoryInterface {
 
     void deleteRecordings(OperationResult callback, Recording... recordings);
 
-    void getRecordingById(long id, GetRecordingCallback callback);
+    void getRecordingById(int id, GetRecordingCallback callback);
 
     LiveData<List<Recording>> getAllRecordings();
 
@@ -61,7 +61,7 @@ public interface RecordingsRepositoryInterface {
 
     void deleteScheduledRecordings(OperationResult callback, ScheduledRecording... recordings);
 
-    void getScheduledRecordingById(long id, GetScheduledRecordingCallback callback);
+    void getScheduledRecordingById(int id, GetScheduledRecordingCallback callback);
 
     LiveData<List<ScheduledRecording>> getAllScheduledRecordings();
 
@@ -69,7 +69,7 @@ public interface RecordingsRepositoryInterface {
 
     void getNextScheduledRecording(GetScheduledRecordingCallback callback);
 
-    void getNumScheduledRecordingsAtTime(long time, GetRecordingsCountCallback callback);
+    void getNumRecordingsAlreadyScheduled(long start, long end, int exceptId, GetRecordingsCountCallback callback);
 
     void getScheduledRecordingsBetween(long start, long end, GetScheduledRecordingsCallback callback);
 }

@@ -172,9 +172,9 @@ public class DBScheduledRecordingsTest {
     @Test
     public void testGetNumScheduledRecordingsAtTime() throws Exception {
         recordingsDao.insertScheduledRecording(new ScheduledRecording(200, 300));
-        int num = recordingsDao.getNumScheduledRecordingsAtTime(250);
+        int num = recordingsDao.getNumRecordingsAlreadyScheduled(250);
         assertEquals("Num of scheduled recordings should be 1, but was " + num, 1, num);
-        num = recordingsDao.getNumScheduledRecordingsAtTime(150);
+        num = recordingsDao.getNumRecordingsAlreadyScheduled(150);
         assertEquals("Num of scheduled recordings should be 0, but was " + num, 0, num);
     }
 

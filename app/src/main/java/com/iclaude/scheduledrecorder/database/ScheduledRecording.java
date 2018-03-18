@@ -62,6 +62,7 @@ public class ScheduledRecording implements Comparable<ScheduledRecording>, Parce
         this.end = end;
     }
 
+    // Implementation of Comparable interface.
     @Override
     public int compareTo(@NonNull ScheduledRecording scheduledRecording) {
         return (int) (getStart() - scheduledRecording.getStart());

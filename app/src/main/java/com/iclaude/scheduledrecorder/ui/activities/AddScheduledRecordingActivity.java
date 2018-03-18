@@ -50,6 +50,7 @@ import static com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterfa
 /**
  * Activity used to add a new scheduled recording.
  */
+// TODO: this class should be deleted when replaced.
 
 public class AddScheduledRecordingActivity extends AppCompatActivity implements MyOnDateSetListener, MyOnTimeSetListener {
     private enum Operation {ADD, EDIT}
@@ -173,7 +174,7 @@ public class AddScheduledRecordingActivity extends AppCompatActivity implements 
     }
 
     public void showDatePickerDialog(View view) {
-        DialogFragment datePicker = DatePickerFragment.newInstance(view.getId());
+        DialogFragment datePicker = DatePickerFragment.newInstance(view.getId(), 1l);
         datePicker.show(getFragmentManager(), "datePicker");
     }
 
@@ -297,7 +298,7 @@ public class AddScheduledRecordingActivity extends AppCompatActivity implements 
     }
 
     private void saveRecording(ScheduledRecording scheduledRecording) {
-        recordingsRepository.getNumScheduledRecordingsAtTime(scheduledRecording.getStart(), count -> {
+        recordingsRepository.getNumRecordingsAlreadyScheduled(scheduledRecording.getStart(), scheduledRecording.getEnd(), -1, count -> {
             if (count != 0) {
                 statusCode = StatusCodes.ERROR_ALREADY_SCHEDULED;
             } else {

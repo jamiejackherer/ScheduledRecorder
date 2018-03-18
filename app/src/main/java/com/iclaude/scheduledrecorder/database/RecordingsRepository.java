@@ -83,7 +83,7 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
     }
 
     @Override
-    public void getRecordingById(long id, GetRecordingCallback callback) {
+    public void getRecordingById(int id, GetRecordingCallback callback) {
         Runnable runnable = () -> {
             final Recording recording = recordingsDao.getRecordingById(id);
 
@@ -167,7 +167,7 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
     }
 
     @Override
-    public void getScheduledRecordingById(long id, GetScheduledRecordingCallback callback) {
+    public void getScheduledRecordingById(int id, GetScheduledRecordingCallback callback) {
         Runnable runnable = () -> {
             final ScheduledRecording recording = recordingsDao.getScheduledRecordingById(id);
 
@@ -217,9 +217,9 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
     }
 
     @Override
-    public void getNumScheduledRecordingsAtTime(long time, GetRecordingsCountCallback callback) {
+    public void getNumRecordingsAlreadyScheduled(long start, long end, int exceptId, GetRecordingsCountCallback callback) {
         Runnable runnable = () -> {
-            final int count = recordingsDao.getNumScheduledRecordingsAtTime(time);
+            final int count = recordingsDao.getNumRecordingsAlreadyScheduled(start, end, exceptId);
 
             appExecutors.mainThread().execute(() -> callback.recordingsCount(count));
         };

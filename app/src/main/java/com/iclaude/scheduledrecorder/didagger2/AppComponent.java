@@ -9,6 +9,7 @@ import com.iclaude.scheduledrecorder.RecordingService;
 import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.ui.activities.AddScheduledRecordingActivity;
+import com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel;
 import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerViewModel;
 import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.RecordingViewModel;
 import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsFragment;
@@ -37,7 +38,9 @@ public interface AppComponent {
 
     void inject(ScheduledRecordingsViewModel scheduledRecordingsViewModel);
 
+    void inject(ScheduledRecordingsFragment scheduledRecordingsFragment);
+
     void inject(AddScheduledRecordingActivity addScheduledRecordingActivity);
 
-    void inject(ScheduledRecordingsFragment scheduledRecordingsFragment);
+    void inject(ScheduledRecordingDetailsViewModel scheduledRecordingDetailsViewModel);
 }

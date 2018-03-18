@@ -10,7 +10,10 @@ import android.os.Environment;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,23 +45,47 @@ public class Utils {
     }
 
     // Format date (date, time in short format).
-    public static String formatDate(long time) {
+    public static String formatDateTimeShort(long time) {
         Date timeAdded = new Date(time);
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         return df.format(timeAdded);
+    }
+
+    // Format date in medium format.
+    public static String formatDateMedium(long time) {
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        return dateFormat.format(new Date(time));
+    }
+
+    // Format time in hh:mm format.
+    public static String formatTime(long time) {
+        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        return dateFormat.format(new Date(time));
     }
 
     // Format duration (hh:mm:ss).
     public static String formatDuration(long duration) {
         String hms;
         if (TimeUnit.MILLISECONDS.toHours(duration) > 0)
-            hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(duration),
+            hms = String.format(Locale.getDefault(), "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(duration),
                     TimeUnit.MILLISECONDS.toMinutes(duration) % TimeUnit.HOURS.toMinutes(1),
                     TimeUnit.MILLISECONDS.toSeconds(duration) % TimeUnit.MINUTES.toSeconds(1));
         else
-            hms = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration) % TimeUnit.HOURS.toMinutes(1),
+            hms = String.format(Locale.getDefault(),"%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration) % TimeUnit.HOURS.toMinutes(1),
                     TimeUnit.MILLISECONDS.toSeconds(duration) % TimeUnit.MINUTES.toSeconds(1));
 
         return hms;
+    }
+
+    public static int getHourFromTimeMillis(long timeMillis) {
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(timeMillis);
+        return cal.get(Calendar.HOUR);
+    }
+
+    public static int getMinuteFromTimeMillis(long timeMillis) {
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(timeMillis);
+        return cal.get(Calendar.MINUTE);
     }
 }
