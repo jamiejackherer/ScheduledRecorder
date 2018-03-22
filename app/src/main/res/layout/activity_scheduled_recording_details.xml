@@ -154,6 +154,21 @@
             tools:text="@string/no_data"
             android:visibility="@{(!viewModel.dataAvailable &amp;&amp; !viewModel.dataLoading) ? View.VISIBLE : View.GONE}"/>
 
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@{viewModel.errorMsgObservable}"
+            android:textAlignment="center"
+            android:textColor="@color/red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/toast_scheduledrecording_timeerror_past" />
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>

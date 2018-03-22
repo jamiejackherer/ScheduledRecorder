@@ -5,7 +5,8 @@
 
 package com.iclaude.scheduledrecorder.ui.activities.scheduled_recording;
 
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT;
+
+import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.RESULT;
 
 /**
  * User actions in ScheduledRecordingActivity.
@@ -13,5 +14,6 @@ import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.Sc
 
 public interface ScheduledRecordingDetailsNavigator {
     void onScheduledRecordingLoaded();
-    void onScheduledRecordingSaved(SAVE_RESULT result);
+
+    void onScheduledRecordingSaved(RESULT result);
 }

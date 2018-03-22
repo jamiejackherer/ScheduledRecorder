@@ -30,10 +30,8 @@ import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.Sc
 import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.OPERATION;
 import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.OPERATION.ADD;
 import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.OPERATION.EDIT;
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT;
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT.ERROR_PAST;
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT.ERROR_SAVE;
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT.ERROR_TIMES_MISMATCH;
+import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.RESULT;
+import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.RESULT.ERROR;
 import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.TIME_TYPE;
 
 /**
@@ -181,20 +179,10 @@ public class ScheduledRecordingDetailsActivity extends AppCompatActivity impleme
     }
 
     @Override
-    public void onScheduledRecordingSaved(SAVE_RESULT result) {
+    public void onScheduledRecordingSaved(RESULT result) {
         // Errors.
-        if (result == ERROR_PAST) {
-            Toast.makeText(this, getString(R.string.toast_scheduledrecording_timeerror_past), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (result == ERROR_TIMES_MISMATCH) {
-            Toast.makeText(this, getString(R.string.toast_scheduledrecording_timeerror_start_after_end), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (result == ERROR_SAVE) {
-            Toast.makeText(ScheduledRecordingDetailsActivity.this, getString(R.string.toast_scheduledrecording_saved_error), Toast.LENGTH_LONG).show();
+        if (result == ERROR) {
+            Toast.makeText(this, getString(R.string.toast_scheduledrecording_saved_error), Toast.LENGTH_SHORT).show();
             return;
         }
 

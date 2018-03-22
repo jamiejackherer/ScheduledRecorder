@@ -5,7 +5,9 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
+import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.SingleLiveEvent;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
@@ -19,10 +21,8 @@ import javax.inject.Inject;
 import static com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface.GetScheduledRecordingCallback;
 import static com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface.OperationResult;
 import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.DATE_TYPE.DATE_START;
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT.ERROR_PAST;
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT.ERROR_SAVE;
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT.ERROR_TIMES_MISMATCH;
-import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.SAVE_RESULT.SUCCESS;
+import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.RESULT.ERROR;
+import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.RESULT.SUCCESS;
 import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.TIME_TYPE.TIME_START;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.HOUR;
@@ -48,21 +48,24 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
         TIME_START, TIME_END
     }
 
-    public enum SAVE_RESULT {
-        ERROR_PAST, ERROR_TIMES_MISMATCH, ERROR_SAVE,
-        SUCCESS
+    public enum RESULT {
+        SUCCESS, ERROR
     }
+
 
     @Inject
     RecordingsRepository recordingsRepository;
+
     public final ObservableField<ScheduledRecording> scheduledRecordingObservable = new ObservableField<>();
     public final ObservableBoolean dataLoading = new ObservableBoolean();
     public final ObservableBoolean dataAvailable = new ObservableBoolean(false);
     public final ObservableBoolean timeStartCorrectObservable = new ObservableBoolean();
     public final ObservableBoolean timeEndCorrectObservable = new ObservableBoolean();
     public final ObservableBoolean timesCorrectObservable = new ObservableBoolean();
+    public final ObservableField<String> errorMsgObservable = new ObservableField<>("");
+
     private final SingleLiveEvent<Void> loadedCommand = new SingleLiveEvent<>();
-    private final SingleLiveEvent<SAVE_RESULT> saveCommand = new SingleLiveEvent<>();
+    private final SingleLiveEvent<RESULT> saveCommand = new SingleLiveEvent<>();
 
     private final Calendar calStart = new GregorianCalendar();
     private final Calendar calEnd = new GregorianCalendar();
@@ -71,6 +74,12 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
     public ScheduledRecordingDetailsViewModel(@NonNull Application application) {
         super(application);
         App.getComponent().inject(this);
+    }
+
+    @VisibleForTesting()
+    public ScheduledRecordingDetailsViewModel(Application application, RecordingsRepository recordingsRepository) {
+        super(application);
+        this. recordingsRepository = recordingsRepository;
     }
 
     public SingleLiveEvent<Void> getLoadedCommand() {
@@ -105,17 +114,26 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
         dataAvailable.set(false);
     }
 
-    private void updateRecordingTimes(ScheduledRecording scheduledRecording) {
-        if (scheduledRecording != null) {
-            calStart.setTimeInMillis(scheduledRecording.getStart());
-            calEnd.setTimeInMillis(scheduledRecording.getEnd());
+    private void updateRecordingTimes(ScheduledRecording rec) {
+        if (rec != null) {
+            calStart.setTimeInMillis(rec.getStart());
+            calEnd.setTimeInMillis(rec.getEnd());
         }
 
-        int id = scheduledRecordingObservable.get().getId();
-        scheduledRecordingObservable.set(new ScheduledRecording(id, calStart.getTimeInMillis(), calEnd.getTimeInMillis()));
+        scheduledRecordingObservable.get().setStart(calStart.getTimeInMillis());
+        scheduledRecordingObservable.get().setEnd(calEnd.getTimeInMillis());
+        scheduledRecordingObservable.notifyChange();
+
         timeStartCorrectObservable.set(timeStartFuture());
         timeEndCorrectObservable.set(timeEndFuture());
         timesCorrectObservable.set(timesCorrect());
+        if(!timesCorrect()) {
+            errorMsgObservable.set(getApplication().getString(R.string.toast_scheduledrecording_timeerror_start_after_end));
+        } else if(!timeStartFuture() || !timeEndFuture()) {
+            errorMsgObservable.set(getApplication().getString(R.string.toast_scheduledrecording_timeerror_past));
+        } else {
+            errorMsgObservable.set("");
+        }
     }
 
     public void setDate(DATE_TYPE dateType, int year, int month, int day) {
@@ -149,18 +167,16 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
     }
 
     // The user clicks the save button in the action bar.
-    public SingleLiveEvent<SAVE_RESULT> getSaveTaskCommand() {
+    public SingleLiveEvent<RESULT> getSaveTaskCommand() {
         return saveCommand;
     }
 
     public void saveScheduledRecording(OPERATION operation) {
         // Check that the times are correct.
         if (!timeStartFuture() || !timeEndFuture()) {
-            saveCommand.setValue(ERROR_PAST);
             return;
         }
         if (!timesCorrect()) {
-            saveCommand.setValue(ERROR_TIMES_MISMATCH);
             return;
         }
 
@@ -175,7 +191,7 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
         ScheduledRecording scheduledRecording = scheduledRecordingObservable.get();
         recordingsRepository.getNumRecordingsAlreadyScheduled(scheduledRecording.getStart(), scheduledRecording.getEnd(), scheduledRecording.getId(), count -> {
             if(count > 0) {
-                saveCommand.setValue(ERROR_SAVE);
+                saveCommand.setValue(ERROR);
             } else {
                 recordingsRepository.updateScheduledRecordings(new OperationResult() {
                     @Override
@@ -185,9 +201,9 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
 
                     @Override
                     public void onFailure() {
-                        saveCommand.setValue(ERROR_SAVE);
+                        saveCommand.setValue(ERROR);
                     }
-                }, scheduledRecordingObservable.get());
+                }, scheduledRecording);
             }
         });
     }
@@ -196,7 +212,7 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
         ScheduledRecording scheduledRecording = scheduledRecordingObservable.get();
         recordingsRepository.getNumRecordingsAlreadyScheduled(scheduledRecording.getStart(), scheduledRecording.getEnd(), scheduledRecording.getId(), count -> {
             if (count > 0) {
-                saveCommand.setValue(ERROR_SAVE);
+                saveCommand.setValue(ERROR);
             } else {
                 recordingsRepository.insertScheduledRecording(scheduledRecordingObservable.get(), new OperationResult() {
                     @Override
@@ -206,7 +222,7 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
 
                     @Override
                     public void onFailure() {
-                        saveCommand.setValue(ERROR_SAVE);
+                        saveCommand.setValue(ERROR);
                     }
                 });
             }

@@ -19,11 +19,11 @@
     <string name="toast_file_delete_error">An error occured while deleting the file</string>
     <string name="toast_file_rename_error">An error occured while renaming the file</string>
     <string name="toast_file_exists">The file %1$s already exists. Please choose a different file name.</string>
-    <string name="toast_scheduledrecording_timeerror_start_after_end">The start time of the recording must be before the end time!</string>
-    <string name="toast_scheduledrecording_timeerror_past">It is not possible to schedule a recording in the past!</string>
+    <string name="toast_scheduledrecording_timeerror_start_after_end">Start time after end time</string>
+    <string name="toast_scheduledrecording_timeerror_past">Recording scheduled in the past</string>
     <string name="toast_scheduledrecording_timeerror_already_scheduled">Another recording has already been scheduled for that time!</string>
     <string name="toast_scheduledrecording_saved">The scheduled recording was saved</string>
-    <string name="toast_scheduledrecording_saved_error">An error occurred while saving the scheduled recording. Please check that no other recordings are scheduled for the same time.</string>
+    <string name="toast_scheduledrecording_saved_error">Error. Check that the time is compatible with other recordings.</string>
     <string name="toast_scheduledrecording_deleted_error">An error occurred while deleting the scheduled recording!</string>
     <string name="toast_scheduledrecording_deleted">Item successfully deleted</string>
     <string name="toast_permissions_denied">The app won\'t work without the requested permissions!</string>
