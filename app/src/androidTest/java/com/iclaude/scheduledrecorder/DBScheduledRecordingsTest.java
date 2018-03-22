@@ -141,12 +141,12 @@ public class DBScheduledRecordingsTest {
         assertEquals("Records not incremented to 3 after 3rd insertion", 3, recordingsDao.getScheduledRecordingsCount());
 
         // Update.
-        scheduledRecording = recordingsDao.getScheduledRecordingById(id);
+        scheduledRecording = recordingsDao.getScheduledRecordingById((int) id);
         scheduledRecording.setStart(250);
         scheduledRecording.setEnd(650);
         int updated = recordingsDao.updateScheduledRecordings(scheduledRecording);
         assertEquals("Number of updated records should be 1 but was " + updated, 1, updated);
-        scheduledRecording = recordingsDao.getScheduledRecordingById(id);
+        scheduledRecording = recordingsDao.getScheduledRecordingById((int) id);
         assertNotNull("Item is null", scheduledRecording);
         assertEquals("Start time should be 250", 250, scheduledRecording.getStart());
         assertEquals("End time should be 650", 650, scheduledRecording.getEnd());
@@ -172,9 +172,9 @@ public class DBScheduledRecordingsTest {
     @Test
     public void testGetNumScheduledRecordingsAtTime() throws Exception {
         recordingsDao.insertScheduledRecording(new ScheduledRecording(200, 300));
-        int num = recordingsDao.getNumRecordingsAlreadyScheduled(250);
+        int num = recordingsDao.getNumRecordingsAlreadyScheduled(250, 280, -1);
         assertEquals("Num of scheduled recordings should be 1, but was " + num, 1, num);
-        num = recordingsDao.getNumRecordingsAlreadyScheduled(150);
+        num = recordingsDao.getNumRecordingsAlreadyScheduled(150, 160, -1);
         assertEquals("Num of scheduled recordings should be 0, but was " + num, 0, num);
     }
 

@@ -40,7 +40,7 @@ public class DBSavedRecordingsTest {
     private AppDatabase appDatabase;
     private RecordingsDao recordingsDao;
 
-    private static final Recording RECORDING = new Recording(25, "recording_name", "recording_path", 15000, 55000);
+    private static final Recording RECORDING = new Recording(25, "recording_name", "recording_path", 15000L, 55000L);
 
     @Before
     public void createDatabase() {
@@ -157,7 +157,7 @@ public class DBSavedRecordingsTest {
     }
 
     private void assertRecording(Recording recording, int id, String name,
-                                 String path, int length, long timeAdded) {
+                                 String path, long length, long timeAdded) {
         assertThat(recording, notNullValue());
         assertThat(recording.getId(), is(id));
         assertThat(recording.getName(), is(name));

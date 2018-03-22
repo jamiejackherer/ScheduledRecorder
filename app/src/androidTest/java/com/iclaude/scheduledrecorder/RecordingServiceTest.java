@@ -4,31 +4,10 @@
 
 package com.iclaude.scheduledrecorder;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.iclaude.scheduledrecorder.database.DBHelper;
-import com.iclaude.scheduledrecorder.utils.Utils;
-
-import org.junit.AfterClass;
-import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.File;
-import java.util.concurrent.TimeoutException;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertNotNull;
 
 /**
  * Tests on RecordingService.
@@ -38,7 +17,7 @@ import static junit.framework.TestCase.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class RecordingServiceTest {
 
-    @Rule
+/*    @Rule
     public final ServiceTestRule mServiceRule = new ServiceTestRule() {
         @Override
         protected void afterService() {
@@ -55,9 +34,9 @@ public class RecordingServiceTest {
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO,
             Manifest.permission.READ_EXTERNAL_STORAGE);
 
-    /*
+    *//*
         Test that the Local Binder Pattern for this Service works correctly.
-     */
+     *//*
     @Test
     public void testLocalBinder() throws TimeoutException {
         // Create the service Intent.
@@ -76,10 +55,10 @@ public class RecordingServiceTest {
         mServiceRule.unbindService();
     }
 
-    /*
+    *//*
         Test that the Service's lifecycle methods are called the exact number of times in response
         to binding, unbinding and calls to startService.
-     */
+     *//*
     @Test
     public void testLifecyleMethodCalls() throws TimeoutException {
         // Create the service Intent.
@@ -99,9 +78,9 @@ public class RecordingServiceTest {
         assertEquals("onDestroy not called after unbinding from Service", 1, RecordingService.onCreateCalls);
     }
 
-    /*
+    *//*
         Test that the Service starts and stops recording when asked to.
-     */
+     *//*
     @Test
     public void testStartAndStopRecording() throws TimeoutException {
         // Bind to Service.
@@ -125,11 +104,11 @@ public class RecordingServiceTest {
 
     }
 
-    /*
+    *//*
         Test the interface used by the Service to communicate information to a connected
         Activity. Test that the interface communicates the right information when starting, stopping
         the Service and when the recording is ongoing.
-     */
+     *//*
     @Test
     public void testOnRecordingStatusChangedListener() throws TimeoutException {
         // Bind to Service.
@@ -161,9 +140,9 @@ public class RecordingServiceTest {
         service.setOnRecordingStatusChangedListener(null);
     }
 
-    /*
+    *//*
         Delete all the data added by the tests.
-     */
+     *//*
     @AfterClass
     public static void clean() {
         Context context = InstrumentationRegistry.getTargetContext();
@@ -218,6 +197,6 @@ public class RecordingServiceTest {
         public String getFilePath() {
             return filePath;
         }
-    }
+    }*/
 
 }
