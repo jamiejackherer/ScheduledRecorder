@@ -5,8 +5,12 @@
 
 package com.iclaude.scheduledrecorder.ui.fragments.fileviewer;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -16,19 +20,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.iclaude.scheduledrecorder.R;
+import com.iclaude.scheduledrecorder.database.Recording;
+import com.iclaude.scheduledrecorder.databinding.FragmentFileViewerBinding;
+import com.iclaude.scheduledrecorder.ui.fragments.PlaybackFragment;
 
+import java.io.File;
 import java.util.ArrayList;
+
 
 /**
  * Fragment displaying the list of existing recordings.
  */
-public class FileViewerFragment extends Fragment{
+public class FileViewerFragment extends Fragment implements RecordingUserActions {
     private static final String TAG = "SCHEDULED_RECORDER_TAG";
     private final String CLASS_NAME = getClass().getSimpleName();
     private static final String ARG_POSITION = "position";
 
+    private FileViewerViewModel viewModel;
     private RecyclerViewAdapter adapter;
     private Context context;
 
@@ -52,28 +64,134 @@ public class FileViewerFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FileViewerViewModel viewModel = ViewModelProviders.of(this).get(FileViewerViewModel.class);
-        viewModel.getRecordings().observe(this, recordings -> {
-            Log.d(TAG, "recordings list reloaded from database");
-            adapter.setRecordings(recordings);
-        });
+        viewModel = ViewModelProviders.of(this).get(FileViewerViewModel.class);
+
+        viewModel.getRecordings().observe(this, recordings -> adapter.setRecordings(recordings));
+
+        viewModel.getPlayRecordingEvent().observe(this, this::playRecording);
+
+        viewModel.getLongClickItemEvent().observe(this, this::showDialogLongClick);
+
+        viewModel.getDeleteCommand().observe(this, msgId -> Toast.makeText(context, getString(msgId), Toast.LENGTH_SHORT).show());
+
+        viewModel.getUpdateCommand().observe(this, msgId -> Toast.makeText(context, getString(msgId), Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_file_viewer, container, false);
+        FragmentFileViewerBinding binding = FragmentFileViewerBinding.inflate(inflater, container, false);
+        binding.setViewModel(viewModel);
+        View rootView = binding.getRoot();
 
-        RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
+
+        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-
         LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-
-        adapter = new RecyclerViewAdapter(new ArrayList<>());
+        adapter = new RecyclerViewAdapter(new ArrayList<>(), viewModel);
         recyclerView.setAdapter(adapter);
 
-        return v;
+        return rootView;
+    }
+
+    // Play.
+    @Override
+    public void playRecording(Recording recording) {
+        try {
+            PlaybackFragment playbackFragment = new PlaybackFragment().newInstance(recording);
+            playbackFragment.show((getActivity().getFragmentManager()), "dialog_playback");
+        } catch (Exception e) {
+            Log.e(TAG, CLASS_NAME + ": error in playing the recording" + e.toString());
+        }
+    }
+
+    // Long click options.
+    private void showDialogLongClick(Recording recording) {
+        ArrayList<String> entries = new ArrayList<>();
+        entries.add(context.getString(R.string.dialog_file_share));
+        entries.add(context.getString(R.string.dialog_file_rename));
+        entries.add(context.getString(R.string.dialog_file_delete));
+
+        final CharSequence[] items = entries.toArray(new CharSequence[entries.size()]);
+
+        // File delete confirm
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getString(R.string.dialog_title_options));
+        builder.setItems(items, (dialog, item) -> {
+            if (item == 0) {
+                shareFile(recording);
+            } else if (item == 1) {
+                renameFile(recording);
+            } else if (item == 2) {
+                deleteFile(recording);
+            }
+        });
+        builder.setCancelable(true);
+        builder.setNegativeButton(context.getString(R.string.dialog_action_cancel),
+                (dialog, id) -> dialog.cancel());
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    // Share.
+    @Override
+    public void shareFile(Recording recording) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(recording.getPath())));
+        shareIntent.setType("audio/mp4");
+        context.startActivity(Intent.createChooser(shareIntent, context.getText(R.string.send_to)));
+    }
+
+    // Rename.
+    @Override
+    public void renameFile(Recording recording) {
+        // File rename dialog.
+        AlertDialog.Builder renameFileBuilder = new AlertDialog.Builder(context);
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_rename_file, null);
+
+        final EditText input = view.findViewById(R.id.new_name);
+
+        renameFileBuilder.setTitle(context.getString(R.string.dialog_title_rename));
+        renameFileBuilder.setCancelable(true);
+        renameFileBuilder.setPositiveButton(context.getString(R.string.dialog_action_ok),
+                (dialog, id) -> {
+                    String newName = input.getText().toString().trim();
+                    viewModel.updateRecording(recording, newName, getActivity());
+
+                    dialog.cancel();
+                });
+        renameFileBuilder.setNegativeButton(context.getString(R.string.dialog_action_cancel),
+                (dialog, id) -> dialog.cancel());
+
+        renameFileBuilder.setView(view);
+        AlertDialog alert = renameFileBuilder.create();
+        alert.show();
+    }
+
+    // Delete.
+    @Override
+    public void deleteFile(Recording recording) {
+        // File delete confirm
+        AlertDialog.Builder confirmDelete = new AlertDialog.Builder(context);
+        confirmDelete.setTitle(context.getString(R.string.dialog_title_delete));
+        confirmDelete.setMessage(context.getString(R.string.dialog_text_delete));
+        confirmDelete.setCancelable(true);
+        confirmDelete.setPositiveButton(context.getString(R.string.dialog_action_yes),
+                (dialog, id) -> {
+                    viewModel.deleteRecording(recording);
+
+                    dialog.cancel();
+                });
+        confirmDelete.setNegativeButton(context.getString(R.string.dialog_action_no),
+                (dialog, id) -> dialog.cancel());
+
+        AlertDialog alert = confirmDelete.create();
+        alert.show();
     }
 }
 

@@ -6,8 +6,12 @@
         <import type="com.iclaude.scheduledrecorder.utils.Utils" />
 
         <variable
-            name="viewModel"
-            type="com.iclaude.scheduledrecorder.ui.fragments.fileviewer.RecordingViewModel" />
+            name="recording"
+            type="com.iclaude.scheduledrecorder.database.Recording" />
+
+        <variable
+            name="listener"
+            type="com.iclaude.scheduledrecorder.ui.fragments.fileviewer.RecordingItemUserActionListener" />
 
     </data>
 
@@ -25,8 +29,8 @@
             android:foreground="?android:attr/selectableItemBackground"
             card_view:cardCornerRadius="4dp"
             card_view:cardElevation="3dp"
-            android:onClick="@{() -> viewModel.onClick(context)}"
-            android:onLongClick="@{() -> viewModel.onLongClick(context)}">
+            android:onClick="@{() -> listener.onClick(recording)}"
+            android:onLongClick="@{() -> listener.onLongClick(recording)}">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,7 +60,7 @@
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:text="@{viewModel.name}"
+                        android:text="@{recording.name}"
                         tools:text="@tools:sample/first_names" />
 
                     <TextView
@@ -66,7 +70,7 @@
                         android:layout_marginTop="7dp"
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="12sp"
-                        android:text="@{Utils.formatDuration(viewModel.length)}"
+                        android:text="@{Utils.formatDuration(recording.length)}"
                         tools:text="@tools:sample/date/hhmmss" />
 
                     <TextView
@@ -75,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="12sp"
-                        android:text="@{Utils.formatDateTimeShort(viewModel.timeAdded)}"
+                        android:text="@{Utils.formatDateTimeShort(recording.timeAdded)}"
                         tools:text="@tools:sample/date/ddmmyy" />
                 </LinearLayout>
 

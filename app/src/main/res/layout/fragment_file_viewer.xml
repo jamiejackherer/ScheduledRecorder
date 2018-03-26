@@ -1,14 +1,55 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_file_viewer"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    tools:context="com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/fragment_file_viewer_item" />
+    <data>
 
-</RelativeLayout>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/fragment_file_viewer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:context="com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerFragment">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/fragment_file_viewer_item"
+            android:visibility="@{viewModel.dataAvailable &amp;&amp; !viewModel.dataLoading ? View.VISIBLE : View.GONE}" />
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:visibility="@{viewModel.dataLoading ? View.VISIBLE : View.GONE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="32dp"
+            android:visibility="@{!viewModel.dataLoading &amp;&amp; !viewModel.dataAvailable ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/no_data"
+            tools:text="@string/no_data" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

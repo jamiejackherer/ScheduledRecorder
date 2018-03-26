@@ -20,28 +20,39 @@ import java.util.List;
  */
 
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHolder> {
-    private static final String TAG = "SCHEDULED_RECORDER_TAG";
-    private final String CLASS_NAME = getClass().getSimpleName();
 
     private List<Recording> recordings;
+    private final FileViewerViewModel fileViewerViewModel;
 
 
-    public RecyclerViewAdapter(List<Recording> recordings) {
+    public RecyclerViewAdapter(List<Recording> recordings, FileViewerViewModel fileViewerViewModel) {
         this.recordings = recordings;
+        this.fileViewerViewModel = fileViewerViewModel;
     }
 
     public RecyclerViewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         FragmentFileViewerItemBinding binding = FragmentFileViewerItemBinding.inflate(layoutInflater, parent, false);
 
-        return new RecyclerViewViewHolder(binding, parent.getContext());
+        RecordingItemUserActionListener listener = new RecordingItemUserActionListener() {
+            @Override
+            public void onClick(Recording recording) {
+                fileViewerViewModel.getPlayRecordingEvent().setValue(recording);
+            }
+
+            @Override
+            public boolean onLongClick(Recording recording) {
+                fileViewerViewModel.getLongClickItemEvent().setValue(recording);
+                return true;
+            }
+        };
+        binding.setListener(listener);
+
+        return new RecyclerViewViewHolder(binding);
     }
 
     public void onBindViewHolder(RecyclerViewViewHolder holder, int position) {
-        //RecordingViewModel recordingViewModel = ViewModelProviders.of((FragmentActivity) holder.getContext()).get(RecordingViewModel.class);
-        //recordingViewModel.setRecording(recordings.get(position));
-        RecordingViewModel recordingViewModel = new RecordingViewModel(recordings.get(position));
-        holder.bind(recordingViewModel);
+        holder.bind(recordings.get(position));
     }
 
     public void setRecordings(List<Recording> recordings) {

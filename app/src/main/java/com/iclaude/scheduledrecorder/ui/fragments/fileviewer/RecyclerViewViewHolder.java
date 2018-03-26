@@ -5,9 +5,9 @@
 
 package com.iclaude.scheduledrecorder.ui.fragments.fileviewer;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import com.iclaude.scheduledrecorder.database.Recording;
 import com.iclaude.scheduledrecorder.databinding.FragmentFileViewerItemBinding;
 
 /**
@@ -15,20 +15,17 @@ import com.iclaude.scheduledrecorder.databinding.FragmentFileViewerItemBinding;
  */
 
 public class RecyclerViewViewHolder extends RecyclerView.ViewHolder {
-    private static final String TAG = "SCHEDULED_RECORDER_TAG";
 
     private final FragmentFileViewerItemBinding binding;
-    private final Context context;
 
-    public RecyclerViewViewHolder(FragmentFileViewerItemBinding binding, Context context) {
+    public RecyclerViewViewHolder(FragmentFileViewerItemBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
 
-        this.context = context;
     }
 
-    public void bind(RecordingViewModel viewModel) {
-        binding.setViewModel(viewModel);
+    public void bind(Recording recording) {
+        binding.setRecording(recording);
         binding.executePendingBindings();
     }
 

@@ -15,10 +15,11 @@
     <!-- Toasts -->
     <string name="toast_recording_start">Recording started</string>
     <string name="toast_recording_finish">Recording saved to</string>
-    <string name="toast_file_delete">%1$s successfully deleted</string>
+    <string name="toast_file_delete">File successfully deleted</string>
     <string name="toast_file_delete_error">An error occured while deleting the file</string>
+    <string name="toast_file_rename">File renamed</string>
     <string name="toast_file_rename_error">An error occured while renaming the file</string>
-    <string name="toast_file_exists">The file %1$s already exists. Please choose a different file name.</string>
+    <string name="toast_file_exists">The file already exists. Please choose a different file name.</string>
     <string name="toast_scheduledrecording_timeerror_start_after_end">Start time after end time</string>
     <string name="toast_scheduledrecording_timeerror_past">Recording scheduled in the past</string>
     <string name="toast_scheduledrecording_timeerror_already_scheduled">Another recording has already been scheduled for that time!</string>
