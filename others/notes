@@ -1,5 +1,10 @@
 da fare:
-- sistemare test sul model
-- cercare info su testing del viewmodel
-- testare il viewmodel
-- funzione cancellazione scheduled recordings superate nel database
+  MVVM – lista recording
+  provare nuovo listadapter per la recyclerview
+
+  Bug fix
+  cancellazione scheduled recording vecchi allo startup
+
+  Test
+  vedi come si testa la view (mock del viewmodel?)
+  test sulla view

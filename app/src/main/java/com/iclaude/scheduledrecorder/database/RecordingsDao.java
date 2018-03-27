@@ -22,16 +22,16 @@ public interface RecordingsDao {
     long insertRecording(Recording recording);
 
     @Update
-    int updateRecordings(Recording... recordings);
+    int updateRecording(Recording recording);
 
     @Delete
-    int deleteRecordings(Recording... recordings);
+    int deleteRecording(Recording recording);
 
     @Query("SELECT * FROM saved_recordings WHERE id = :id")
     Recording getRecordingById(int id);
 
 
-    @Query("SELECT * FROM saved_recordings")
+    @Query("SELECT * FROM saved_recordings ORDER BY time_added DESC")
     LiveData<List<Recording>> getAllRecordings();
 
     @Query("SELECT COUNT(*) FROM saved_recordings")

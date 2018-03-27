@@ -6,11 +6,14 @@
 package com.iclaude.scheduledrecorder.database;
 
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.iclaude.scheduledrecorder.didagger2.App;
 import com.iclaude.scheduledrecorder.utils.AppExecutors;
+import com.iclaude.scheduledrecorder.utils.Utils;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,7 +21,7 @@ import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Access point to the database.
+ * Access point to the database and files.
  */
 
 public class RecordingsRepository implements RecordingsRepositoryInterface {
@@ -51,32 +54,58 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
     }
 
     @Override
-    public void updateRecordings(OperationResult callback, Recording... recordings) {
-        checkNotNull(recordings);
+    public void updateRecording(Recording recording, String newName, Context context, OperationResult callback) {
+        checkNotNull(recording);
         Runnable updateRunnable = () -> {
-            int num = recordingsDao.updateRecordings(recordings);
+            // Rename the file.
+            String newPath = Utils.getDirectoryPath(context);
+            newPath += "/" + newName;
+            File f = new File(newPath);
+            if (f.exists() && !f.isDirectory()) {
+                appExecutors.mainThread().execute(() -> callback.onFailure());
+                return;
+            }
 
+            File oldFilePath = new File(recording.getPath());
+            boolean renamed = oldFilePath.renameTo(f);
+            if (!renamed) {
+                appExecutors.mainThread().execute(() -> callback.onFailure());
+                return;
+            }
+
+            // Update the database.
+            recording.setName(newName);
+            recording.setPath(newPath);
+            int num = recordingsDao.updateRecording(recording);
             appExecutors.mainThread().execute(() -> {
                 if (num > 0)
-                    callback.onSuccess();
+                    appExecutors.mainThread().execute(() -> callback.onSuccess());
                 else
-                    callback.onFailure();
+                    appExecutors.mainThread().execute(() -> callback.onFailure());
             });
         };
         appExecutors.diskIO().execute(updateRunnable);
     }
 
     @Override
-    public void deleteRecordings(OperationResult callback, Recording... recordings) {
-        checkNotNull(recordings);
+    public void deleteRecording(Recording recording, OperationResult callback) {
+        checkNotNull(recording);
         Runnable deleteRunnable = () -> {
-            int num = recordingsDao.deleteRecordings(recordings);
+            // Delete file from storage.
+            File file = new File(recording.getPath());
+            boolean deleted = file.delete();
+            if (!deleted) {
+                appExecutors.mainThread().execute(() -> callback.onFailure());
+                return;
+            }
 
+            // Delete recording from database.
+            int num = recordingsDao.deleteRecording(recording);
             appExecutors.mainThread().execute(() -> {
                 if (num > 0)
-                    callback.onSuccess();
+                    appExecutors.mainThread().execute(() -> callback.onSuccess());
                 else
-                    callback.onFailure();
+                    appExecutors.mainThread().execute(() -> callback.onFailure());
             });
         };
         appExecutors.diskIO().execute(deleteRunnable);

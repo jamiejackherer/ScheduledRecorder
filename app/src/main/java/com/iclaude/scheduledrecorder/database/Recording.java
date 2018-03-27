@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 
 /**
  * Table "saved_recordings".
- * TODO: index fields for searches (see DAO class)
  */
 
 @Entity(tableName = "saved_recordings")

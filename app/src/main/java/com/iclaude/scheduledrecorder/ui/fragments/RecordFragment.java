@@ -194,7 +194,6 @@ public class RecordFragment extends Fragment {
     }
 
     // RecordingsDao Start/Stop
-    //TODO: recording pause
     private void startStopRecording() {
         if (!isRecording) { // start recording
             // Start RecordingService: send request to main Activity.
@@ -230,9 +229,6 @@ public class RecordFragment extends Fragment {
     }
 
     //TODO: implement pause recording
-/*    private void onPauseRecord(boolean pause) {
-
-    }*/
 
     /*
         When the Activity establishes the connection with the Service, it informs this Fragment
