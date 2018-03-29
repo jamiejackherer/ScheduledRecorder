@@ -103,7 +103,7 @@ public class DBSavedRecordingsTest {
 
         // When the recording is updated
         Recording updatedRecording = new Recording(25, "new_recording_name", "new_recording_path", 10000, 20000);
-        recordingsDao.updateRecordings(updatedRecording);
+        recordingsDao.updateRecording(updatedRecording);
 
         // When getting the recording by id from the database
         Recording loaded = recordingsDao.getRecordingById(25);
@@ -118,7 +118,7 @@ public class DBSavedRecordingsTest {
         recordingsDao.insertRecording(RECORDING);
 
         //When deleting a recording by id
-        recordingsDao.deleteRecordings(RECORDING);
+        recordingsDao.deleteRecording(RECORDING);
 
         //When getting the recordings
         LiveData<List<Recording>> myLiveData = recordingsDao.getAllRecordings();
@@ -143,7 +143,7 @@ public class DBSavedRecordingsTest {
         Recording recording = recordingsDao.getRecordingById(25);
         recording.setName("new_name");
         recording.setPath("new_path");
-        int updated = recordingsDao.updateRecordings(recording);
+        int updated = recordingsDao.updateRecording(recording);
         assertThat("Number of updated records should be 1 but was " + updated, updated, is(1));
         recording = recordingsDao.getRecordingById(25);
         assertThat("Item is null", recording, notNullValue());
@@ -151,7 +151,7 @@ public class DBSavedRecordingsTest {
         assertThat("Path not updated", recording.getPath(), equalTo("new_path"));
 
         // Delete.
-        int deleted = recordingsDao.deleteRecordings(recording);
+        int deleted = recordingsDao.deleteRecording(recording);
         assertThat("Number of deleted records should be 1 but was " + deleted, deleted, is(1));
         assertThat("Records not decreased to 2 after deletion", recordingsDao.getRecordingsCount(), is(2));
     }

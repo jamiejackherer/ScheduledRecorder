@@ -37,12 +37,12 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHolder> {
         RecordingItemUserActionListener listener = new RecordingItemUserActionListener() {
             @Override
             public void onClick(Recording recording) {
-                fileViewerViewModel.getPlayRecordingEvent().setValue(recording);
+                fileViewerViewModel.playRecording(recording);
             }
 
             @Override
             public boolean onLongClick(Recording recording) {
-                fileViewerViewModel.getLongClickItemEvent().setValue(recording);
+                fileViewerViewModel.showLongClickDialogOptions(recording);
                 return true;
             }
         };

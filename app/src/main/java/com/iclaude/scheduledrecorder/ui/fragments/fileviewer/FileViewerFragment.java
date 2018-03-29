@@ -66,7 +66,9 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
 
         viewModel = ViewModelProviders.of(this).get(FileViewerViewModel.class);
 
-        viewModel.getRecordings().observe(this, recordings -> adapter.setRecordings(recordings));
+        viewModel.getRecordings().observe(this, recordings -> {
+            adapter.setRecordings(recordings);
+        });
 
         viewModel.getPlayRecordingEvent().observe(this, this::playRecording);
 
@@ -161,7 +163,7 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
         renameFileBuilder.setPositiveButton(context.getString(R.string.dialog_action_ok),
                 (dialog, id) -> {
                     String newName = input.getText().toString().trim();
-                    viewModel.updateRecording(recording, newName, getActivity());
+                    viewModel.updateRecording(recording, newName);
 
                     dialog.cancel();
                 });

@@ -21,7 +21,6 @@ import dagger.Component;
 /**
  * Dagger @Component class.
  */
-// TODO: delete DBHelperModule.class when completely substituted.
 @Component(modules = {AppModule.class, DatabaseModule.class})
 @Singleton
 public interface AppComponent {

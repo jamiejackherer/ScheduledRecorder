@@ -6,6 +6,7 @@
 package com.iclaude.scheduledrecorder.database;
 
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 
 import java.util.List;
 
@@ -31,9 +32,9 @@ public interface RecordingsRepositoryInterface {
 
     void insertRecording(Recording recording, OperationResult callback);
 
-    void updateRecordings(OperationResult callback, Recording... recordings);
+    void updateRecording(Recording recording, String newName, Context context, OperationResult callback);
 
-    void deleteRecordings(OperationResult callback, Recording... recordings);
+    void deleteRecording(Recording recording, OperationResult callback);
 
     void getRecordingById(int id, GetRecordingCallback callback);
 
