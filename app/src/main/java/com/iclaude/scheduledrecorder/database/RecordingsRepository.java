@@ -74,9 +74,8 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
             }
 
             // Update the database.
-            recording.setName(newName);
-            recording.setPath(newPath);
-            int num = recordingsDao.updateRecording(recording);
+            Recording updatedRecording = new Recording(recording.getId(), newName, newPath, recording.getLength(), recording.getTimeAdded());
+            int num = recordingsDao.updateRecording(updatedRecording);
             appExecutors.mainThread().execute(() -> {
                 if (num > 0)
                     appExecutors.mainThread().execute(() -> callback.onSuccess());

@@ -41,7 +41,7 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
     private static final String ARG_POSITION = "position";
 
     private FileViewerViewModel viewModel;
-    private RecyclerViewAdapter adapter;
+    private RecyclerViewListAdapter adapter;
     private Context context;
 
     public static FileViewerFragment newInstance(int position) {
@@ -67,7 +67,7 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
         viewModel = ViewModelProviders.of(this).get(FileViewerViewModel.class);
 
         viewModel.getRecordings().observe(this, recordings -> {
-            adapter.setRecordings(recordings);
+            adapter.submitList(recordings);
         });
 
         viewModel.getPlayRecordingEvent().observe(this, this::playRecording);
@@ -91,7 +91,7 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
         LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        adapter = new RecyclerViewAdapter(new ArrayList<>(), viewModel);
+        adapter = new RecyclerViewListAdapter(new RecordingDiffCallback(), viewModel);
         recyclerView.setAdapter(adapter);
 
         return rootView;

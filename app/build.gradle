@@ -62,8 +62,8 @@ android {
 }
 
 ext {
-    libraryVersion = '27.0.2'
-    daggerVersion = '2.11-rc2'
+    libraryVersion = '27.1.0'
+    daggerVersion = '2.15'
     roomVersion = '1.0.0'
     mockitoVersion = '2.+'
     hamcrestVersion = '1.3'

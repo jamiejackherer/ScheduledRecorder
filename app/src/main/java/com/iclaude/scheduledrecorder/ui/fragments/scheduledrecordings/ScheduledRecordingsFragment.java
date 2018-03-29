@@ -18,7 +18,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +81,6 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
 
         viewModel = ViewModelProviders.of(this).get(ScheduledRecordingsViewModel.class);
         viewModel.getScheduledRecordings().observe(this, scheduledRecordings -> {
-            Log.d(TAG, "scheduled recordings list reloaded from database");
             updateUI(scheduledRecordings);
         });
     }
