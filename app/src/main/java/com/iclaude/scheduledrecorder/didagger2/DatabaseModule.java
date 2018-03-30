@@ -54,6 +54,6 @@ public class DatabaseModule {
     @Singleton
     @NonNull
     public RecordingsRepository provideRecordingsRepository(AppExecutors appExecutors, RecordingsDao recordingsDao) {
-        return new RecordingsRepository(appExecutors, recordingsDao);
+        return new RecordingsRepository();
     }
 }

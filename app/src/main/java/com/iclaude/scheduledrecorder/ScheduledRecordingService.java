@@ -20,6 +20,7 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
+import com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
 import com.iclaude.scheduledrecorder.didagger2.App;
 
@@ -112,7 +113,7 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
     public boolean handleMessage(Message message) {
         if (message.what == SCHEDULE_RECORDINGS) {
             resetAlarmManager(); // cancel all pending alarms
-            scheduleNextRecording();
+            deleteOldRecordingsAndScheduleNext();
             if (wakeful) {
                 BootUpReceiver.completeWakefulIntent(startIntent);
             }
@@ -126,6 +127,20 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
         Intent intent = RecordingService.makeIntent(context);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
         alarmManager.cancel(pendingIntent);
+    }
+
+    // Delete expired scheduled recordings from database.
+    private void deleteOldRecordingsAndScheduleNext() {
+        recordingsRepository.deleteOldScheduledRecordings(System.currentTimeMillis(), new RecordingsRepositoryInterface.OperationResult() {
+            @Override
+            public void onSuccess() {
+                scheduleNextRecording();
+            }
+
+            @Override
+            public void onFailure() {
+            }
+        });
     }
 
     // Get scheduled recordings from database and set the AlarmManager.

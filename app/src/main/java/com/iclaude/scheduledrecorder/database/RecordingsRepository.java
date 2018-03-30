@@ -7,7 +7,6 @@ package com.iclaude.scheduledrecorder.database;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.iclaude.scheduledrecorder.didagger2.App;
 import com.iclaude.scheduledrecorder.utils.AppExecutors;
@@ -31,7 +30,7 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
     @Inject
     AppExecutors appExecutors;
 
-    public RecordingsRepository(@NonNull AppExecutors appExecutors, @NonNull RecordingsDao recordingsDao) {
+    public RecordingsRepository() {
         App.getComponent().inject(this);
     }
 
@@ -62,14 +61,14 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
             newPath += "/" + newName;
             File f = new File(newPath);
             if (f.exists() && !f.isDirectory()) {
-                appExecutors.mainThread().execute(() -> callback.onFailure());
+                appExecutors.mainThread().execute(callback::onFailure);
                 return;
             }
 
             File oldFilePath = new File(recording.getPath());
             boolean renamed = oldFilePath.renameTo(f);
             if (!renamed) {
-                appExecutors.mainThread().execute(() -> callback.onFailure());
+                appExecutors.mainThread().execute(callback::onFailure);
                 return;
             }
 
@@ -78,9 +77,9 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
             int num = recordingsDao.updateRecording(updatedRecording);
             appExecutors.mainThread().execute(() -> {
                 if (num > 0)
-                    appExecutors.mainThread().execute(() -> callback.onSuccess());
+                    appExecutors.mainThread().execute(callback::onSuccess);
                 else
-                    appExecutors.mainThread().execute(() -> callback.onFailure());
+                    appExecutors.mainThread().execute(callback::onFailure);
             });
         };
         appExecutors.diskIO().execute(updateRunnable);
@@ -94,7 +93,7 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
             File file = new File(recording.getPath());
             boolean deleted = file.delete();
             if (!deleted) {
-                appExecutors.mainThread().execute(() -> callback.onFailure());
+                appExecutors.mainThread().execute(callback::onFailure);
                 return;
             }
 
@@ -102,9 +101,9 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
             int num = recordingsDao.deleteRecording(recording);
             appExecutors.mainThread().execute(() -> {
                 if (num > 0)
-                    appExecutors.mainThread().execute(() -> callback.onSuccess());
+                    appExecutors.mainThread().execute(callback::onSuccess);
                 else
-                    appExecutors.mainThread().execute(() -> callback.onFailure());
+                    appExecutors.mainThread().execute(callback::onFailure);
             });
         };
         appExecutors.diskIO().execute(deleteRunnable);
@@ -189,6 +188,20 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
                     callback.onSuccess();
                 else
                     callback.onFailure();
+            });
+        };
+        appExecutors.diskIO().execute(deleteRunnable);
+    }
+
+    @Override
+    public void deleteOldScheduledRecordings(long time, OperationResult callback) {
+        Runnable deleteRunnable = () -> {
+            recordingsDao.deleteOldScheduledRecordings(time);
+
+            appExecutors.mainThread().execute(() -> {
+                if (callback == null) return;
+
+                callback.onSuccess();
             });
         };
         appExecutors.diskIO().execute(deleteRunnable);

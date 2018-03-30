@@ -62,6 +62,8 @@ public interface RecordingsRepositoryInterface {
 
     void deleteScheduledRecordings(OperationResult callback, ScheduledRecording... recordings);
 
+    void deleteOldScheduledRecordings(long time, OperationResult callback);
+
     void getScheduledRecordingById(int id, GetScheduledRecordingCallback callback);
 
     LiveData<List<ScheduledRecording>> getAllScheduledRecordings();

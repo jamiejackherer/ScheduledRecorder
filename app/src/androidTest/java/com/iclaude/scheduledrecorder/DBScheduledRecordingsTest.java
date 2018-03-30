@@ -128,6 +128,23 @@ public class DBScheduledRecordingsTest {
     }
 
     @Test
+    public void testDeleteOldScheduledRecordings() throws Exception {
+        // Insert some recordings in the past.
+        long now = System.currentTimeMillis();
+        recordingsDao.insertScheduledRecording(new ScheduledRecording(now - 100000, now - 98000));
+        recordingsDao.insertScheduledRecording(new ScheduledRecording(now - 200000, now - 198000));
+        recordingsDao.insertScheduledRecording(new ScheduledRecording(now - 300000, now - 298000));
+
+        // Delete expired scheduled recordings.
+        recordingsDao.deleteOldScheduledRecordings(now);
+
+        // Check that the database is empty.
+        LiveData<List<ScheduledRecording>> myLiveData = recordingsDao.getAllScheduledRecordings();
+        List<ScheduledRecording> recordings = LiveDataTestUtil.getValue(myLiveData);
+        assertThat(recordings.size(), is(0));
+    }
+
+    @Test
     public void testAddUpdateDelete() throws Exception {
         assertEquals("Table is not empty", 0, recordingsDao.getScheduledRecordingsCount());
 
