@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
 import com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsActivity;
+import com.iclaude.scheduledrecorder.utils.PermissionsManager;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.text.DateFormat;
@@ -54,8 +56,7 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
     private final String TAG = "SCHEDULED_RECORDER_TAG";
     private static final String ARG_POSITION = "position";
     private static final int REQUEST_DANGEROUS_PERMISSIONS = 0;
-    private static final int ADD_SCHEDULED_RECORDING = 0;
-    private static final int EDIT_SCHEDULED_RECORDING = 1;
+    private final boolean marshmallow = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
 
     private CompactCalendarView calendarView;
     private TextView tvMonth;
@@ -207,28 +208,21 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
     }
 
     // Click listener of the button to add a new scheduled recording.
-    private final View.OnClickListener addScheduledRecordingListener = view -> checkPermissions();
+    private final View.OnClickListener addScheduledRecordingListener = view -> checkPermissionsAndSchedule();
 
     // Check dangerous permissions for Android Marshmallow+.
-    @SuppressWarnings("ConstantConditions")
-    private void checkPermissions() {
-        // Check permissions.
-        boolean writePerm = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        boolean audioPerm = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
-        String[] arrPermissions;
-        if (!writePerm && !audioPerm) {
-            arrPermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
-        } else if (!writePerm && audioPerm) {
-            arrPermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        } else if (writePerm && !audioPerm) {
-            arrPermissions = new String[]{Manifest.permission.RECORD_AUDIO};
-        } else {
+    private void checkPermissionsAndSchedule() {
+        if(!marshmallow) {
             startScheduledRecordingDetailsActivity();
             return;
         }
 
-        // Request permissions.
-        requestPermissions(arrPermissions, REQUEST_DANGEROUS_PERMISSIONS);
+        String[] permissionsToAsk = PermissionsManager.checkPermissions(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+        if(permissionsToAsk.length > 0)
+            requestPermissions(permissionsToAsk, REQUEST_DANGEROUS_PERMISSIONS);
+        else
+            startScheduledRecordingDetailsActivity();
     }
 
     @Override

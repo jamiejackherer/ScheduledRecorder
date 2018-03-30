@@ -10,6 +10,7 @@ import android.os.Environment;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -87,5 +88,11 @@ public class Utils {
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(timeMillis);
         return cal.get(Calendar.MINUTE);
+    }
+
+    // Format seconds elapsed for chronometer in mm:ss format.
+    public static String formatSecondsElapsedForChronometer(int seconds) {
+        SimpleDateFormat mTimerFormat = new SimpleDateFormat("mm:ss", Locale.getDefault());
+        return mTimerFormat.format(new Date(seconds * 1000L));
     }
 }

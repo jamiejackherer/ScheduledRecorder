@@ -109,7 +109,7 @@ public class RecordingService extends Service {
     }
 
     /*
-        Interface used to communicate to a connected Activity changes in the status of a
+        Interface used to communicate to a connected component changes in the status of a
         recording:
         - recording started
         - recording stopped (with file path)
