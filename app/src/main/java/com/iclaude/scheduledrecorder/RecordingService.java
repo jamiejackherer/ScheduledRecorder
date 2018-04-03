@@ -74,29 +74,20 @@ public class RecordingService extends Service {
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static int onStartCommandCalls = 0;
 
-
     /*
         Static factory method used to create an Intent to start this Service. The boolean value
         activityStarter is true if this method is called by an Activity, false otherwise (i.e.
         Service started by an AlarmManager for a scheduled recording).
     */
     public static Intent makeIntent(Context context, boolean activityStarter) {
-        Intent intent = new Intent(context, RecordingService.class);
+        Intent intent = new Intent(context.getApplicationContext(), RecordingService.class);
         intent.putExtra(EXTRA_ACTIVITY_STARTER, activityStarter);
         return intent;
     }
 
     /*
-        Other convenient method used to retrieve an empty Intent (i.e to stop this Service).
-     */
-    public static Intent makeIntent(Context context) {
-        return new Intent(context, RecordingService.class);
-    }
-
-    /*
         The following code implements a bound Service used to connect this Service to an Activity.
     */
-
     public class LocalBinder extends Binder {
         public RecordingService getService() {
             return RecordingService.this;

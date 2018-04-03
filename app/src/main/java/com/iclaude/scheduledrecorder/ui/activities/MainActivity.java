@@ -23,7 +23,7 @@ import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.iclaude.scheduledrecorder.R;
-import com.iclaude.scheduledrecorder.ui.fragments.LicensesFragment;
+import com.iclaude.scheduledrecorder.RecordingService;
 import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerFragment;
 import com.iclaude.scheduledrecorder.ui.fragments.record.RecordFragment;
 import com.iclaude.scheduledrecorder.ui.fragments.record.RecordViewModel;
@@ -35,8 +35,6 @@ import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledR
     TODO delete all unused classes.
  */
 public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "SCHEDULED_RECORDER_TAG";
 
     private RecordViewModel recordViewModel; // manages connection with RecordingService
 
@@ -76,11 +74,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openLicenses() {
-        LicensesFragment licensesFragment = new LicensesFragment();
-        licensesFragment.show(getFragmentManager().beginTransaction(), "dialog_licenses");
-    }
-
     class MyAdapter extends FragmentPagerAdapter {
         private final String[] titles = {getString(R.string.tab_title_record),
                 getString(R.string.tab_title_saved_recordings),
@@ -94,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch(position){
                 case 0:{
-                    RecordFragment recordFragment = RecordFragment.newInstance(position);
-                    return recordFragment;
+                    return RecordFragment.newInstance(position);
                 }
                 case 1:{
                     return FileViewerFragment.newInstance(position);
@@ -126,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        recordViewModel.connectService(this);
+        recordViewModel.connectService(RecordingService.makeIntent(this, true));
     }
 
     // Disconnection from local Service.
@@ -134,6 +126,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        recordViewModel.disconnectService();
+        recordViewModel.disconnectAndStopService(new Intent(this, RecordingService.class));
     }
 }

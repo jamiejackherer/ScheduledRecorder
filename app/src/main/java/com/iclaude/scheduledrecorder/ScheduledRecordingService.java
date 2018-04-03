@@ -124,7 +124,7 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
 
     // Cancels all pending alarms already set in the AlarmManager.
     protected void resetAlarmManager() {
-        Intent intent = RecordingService.makeIntent(context);
+        Intent intent = new Intent(context, RecordingService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
         alarmManager.cancel(pendingIntent);
     }

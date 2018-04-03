@@ -55,8 +55,8 @@ public class RecordFragment extends Fragment {
 
         recordViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(RecordViewModel.class);
 
-        recordViewModel.getToastMsg().observe(this, msg ->
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show());
+        recordViewModel.getToastMsg().observe(this, msgId ->
+                Toast.makeText(getActivity(), getString(msgId), Toast.LENGTH_SHORT).show());
     }
 
     @SuppressLint("SetTextI18n")

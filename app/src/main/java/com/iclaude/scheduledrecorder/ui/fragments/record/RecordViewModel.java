@@ -1,52 +1,58 @@
 package com.iclaude.scheduledrecorder.ui.fragments.record;
 
-import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableInt;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.RecordingService;
 import com.iclaude.scheduledrecorder.SingleLiveEvent;
 
 import static android.content.Context.BIND_AUTO_CREATE;
+import static com.iclaude.scheduledrecorder.RecordingService.OnRecordingStatusChangedListener;
 
 /**
  * View model for RecordFragment.
  * Manages the connection with RecordingService and the related data.
  */
 public class RecordViewModel extends AndroidViewModel {
+
     public final ObservableBoolean serviceConnected = new ObservableBoolean(false);
     public final ObservableBoolean serviceRecording = new ObservableBoolean(false);
     public final ObservableInt secondsElapsed = new ObservableInt(0);
-    private final SingleLiveEvent<String> toastMsg = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Integer> toastMsg = new SingleLiveEvent<>();
 
     private RecordingService recordingService;
-    private Activity activity;
 
 
     public RecordViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public void connectService(Activity activity) {
-        this.activity = activity;
-
-        getApplication().startService(RecordingService.makeIntent(getApplication(), true));
-        getApplication().bindService(RecordingService.makeIntent(getApplication(), true), serviceConnection, BIND_AUTO_CREATE);
+    @VisibleForTesting
+    public RecordViewModel(Application application, RecordingService recordingService) {
+        super(application);
+        this.recordingService = recordingService;
     }
 
-    public void disconnectService() {
+    public void connectService(Intent intent) {
+        getApplication().startService(intent);
+        getApplication().bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+    }
+
+    public void disconnectAndStopService(Intent intent) {
         if (!serviceConnected.get()) return;
 
         getApplication().unbindService(serviceConnection);
         if (!serviceRecording.get())
-            getApplication().stopService(RecordingService.makeIntent(getApplication()));
+            getApplication().stopService(intent);
         recordingService.setOnRecordingStatusChangedListener(null);
         recordingService = null;
         serviceConnected.set(false);
@@ -61,7 +67,7 @@ public class RecordViewModel extends AndroidViewModel {
         recordingService.stopRecording();
     }
 
-    public SingleLiveEvent<String> getToastMsg() {
+    public SingleLiveEvent<Integer> getToastMsg() {
         return toastMsg;
     }
 
@@ -80,8 +86,10 @@ public class RecordViewModel extends AndroidViewModel {
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            recordingService.setOnRecordingStatusChangedListener(null);
-            recordingService = null;
+            if (recordingService != null) {
+                recordingService.setOnRecordingStatusChangedListener(null);
+                recordingService = null;
+            }
             serviceConnected.set(false);
         }
     };
@@ -92,32 +100,30 @@ public class RecordViewModel extends AndroidViewModel {
         recording has started/stopped, and the seconds elapsed, so that the UI can be updated
         accordingly.
     */
-    private final RecordingService.OnRecordingStatusChangedListener onScheduledRecordingListener =
-            new RecordingService.OnRecordingStatusChangedListener() {
+    private final OnRecordingStatusChangedListener onScheduledRecordingListener =
+            new OnRecordingStatusChangedListener() {
         @Override
         public void onRecordingStarted() {
             serviceRecording.set(true);
-            toastMsg.setValue(getApplication().getString(R.string.toast_recording_start));
+            toastMsg.postValue(R.string.toast_recording_start);
         }
 
         @Override
         public void onRecordingStopped(String filePath) {
             serviceRecording.set(false);
             secondsElapsed.set(0);
-            toastMsg.setValue(getApplication().getString(R.string.toast_recording_finish) + " " + filePath);
+            toastMsg.postValue(R.string.toast_recording_finish);
         }
 
         // This method is called from a separate thread.
         @Override
         public void onTimerChanged(int seconds) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    secondsElapsed.set(seconds);
-                }
-            });
+            secondsElapsed.set(seconds);
         }
     };
 
-
+    @VisibleForTesting
+    public RecordingService getRecordingService() {
+        return recordingService;
+    }
 }
