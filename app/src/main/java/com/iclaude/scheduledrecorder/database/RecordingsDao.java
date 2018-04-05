@@ -46,7 +46,7 @@ public interface RecordingsDao {
     int updateScheduledRecordings(ScheduledRecording... scheduledRecordings);
 
     @Delete
-    int deleteScheduledRecordings(ScheduledRecording... scheduledRecordings);
+    int deleteScheduledRecording(ScheduledRecording scheduledRecording);
 
     @Query("DELETE FROM scheduled_recordings WHERE start_time < :time")
     int deleteOldScheduledRecordings(long time);

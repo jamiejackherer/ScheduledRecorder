@@ -112,7 +112,7 @@ public class RecordViewModel extends AndroidViewModel {
         public void onRecordingStopped(String filePath) {
             serviceRecording.set(false);
             secondsElapsed.set(0);
-            toastMsg.postValue(R.string.toast_recording_finish);
+            toastMsg.postValue(R.string.toast_recording_saved);
         }
 
         // This method is called from a separate thread.

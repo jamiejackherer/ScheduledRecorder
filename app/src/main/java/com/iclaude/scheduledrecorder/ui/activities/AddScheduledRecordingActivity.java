@@ -77,7 +77,7 @@ public class AddScheduledRecordingActivity extends AppCompatActivity implements 
     private int yearStart, monthStart, dayStart, hourStart, minuteStart;
     private int yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd;
     private int statusCode = StatusCodes.NO_ERROR;
-    private static final int[] toastMsgs = {R.string.toast_scheduledrecording_saved,
+    private static final int[] toastMsgs = {R.string.toast_recording_saved,
             R.string.toast_scheduledrecording_timeerror_start_after_end, R.string.toast_scheduledrecording_timeerror_past,
             R.string.toast_scheduledrecording_timeerror_already_scheduled, R.string.toast_scheduledrecording_saved_error};
 

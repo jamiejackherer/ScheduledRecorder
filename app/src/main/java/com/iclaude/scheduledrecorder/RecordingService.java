@@ -133,7 +133,7 @@ public class RecordingService extends Service {
                         public void onSuccess(ScheduledRecording recording) {
                             int duration = (int) (recording.getEnd() - recording.getStart());
                             // Remove scheduled recording from database and schedule next recording.
-                            recordingsRepository.deleteScheduledRecordings(null, recording);
+                            recordingsRepository.deleteScheduledRecording(recording,null);
                             startService(ScheduledRecordingService.makeIntent(RecordingService.this, false));
 
                             if (!isRecording && hasPermissions()) {

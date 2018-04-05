@@ -14,19 +14,16 @@
 
     <!-- Toasts -->
     <string name="toast_recording_start">Recording started</string>
-    <string name="toast_recording_finish">The recording was saved</string>
-    <string name="toast_file_delete">File successfully deleted</string>
-    <string name="toast_file_delete_error">An error occured while deleting the file</string>
-    <string name="toast_file_rename">File renamed</string>
-    <string name="toast_file_rename_error">An error occured while renaming the file</string>
+    <string name="toast_recording_saved">Recording saved</string>
+    <string name="toast_recording_deleted">Recording deleted</string>
+    <string name="toast_recording_deleted_error">Error deleting the recording</string>
+    <string name="toast_file_renamed">File renamed</string>
+    <string name="toast_file_renamed_error">Error renaming the file</string>
     <string name="toast_file_exists">The file already exists. Please choose a different file name.</string>
-    <string name="toast_scheduledrecording_timeerror_start_after_end">Start time after end time</string>
+    <string name="toast_scheduledrecording_timeerror_start_after_end">Start time after filterEnd time</string>
     <string name="toast_scheduledrecording_timeerror_past">Recording scheduled in the past</string>
     <string name="toast_scheduledrecording_timeerror_already_scheduled">Another recording has already been scheduled for that time!</string>
-    <string name="toast_scheduledrecording_saved">The scheduled recording was saved</string>
     <string name="toast_scheduledrecording_saved_error">Error. Check that the time is compatible with other recordings.</string>
-    <string name="toast_scheduledrecording_deleted_error">An error occurred while deleting the scheduled recording!</string>
-    <string name="toast_scheduledrecording_deleted">Item successfully deleted</string>
     <string name="toast_permissions_denied">The app won\'t work without the requested permissions!</string>
 
 
@@ -57,7 +54,7 @@
     <string name="pause_recording_button">Pause</string>
     <string name="resume_recording_button">Resume</string>
     <string name="default_file_name">My Recording</string>
-    <string name="record_prompt">Tap the button to start recording</string>
+    <string name="record_prompt">Tap the button to filterStart recording</string>
     <string name="record_in_progress">Recording…</string>
 
     <string name="send_to">Send to</string>

@@ -13,19 +13,16 @@
 
     <!-- Toasts -->
     <string name="toast_recording_start">Inizio registrazione</string>
-    <string name="toast_recording_finish">Registrazione salvata</string>
-    <string name="toast_file_delete">File eliminato con successo</string>
-    <string name="toast_file_delete_error">Errore nella cancellazione della registrazione</string>
-    <string name="toast_file_rename">File rinominato</string>
-    <string name="toast_file_rename_error">Errore nella rinominazione del file</string>
+    <string name="toast_recording_saved">Registrazione salvata</string>
+    <string name="toast_recording_deleted">Registrazione eliminata</string>
+    <string name="toast_recording_deleted_error">Errore nella eliminazione della registrazione</string>
+    <string name="toast_file_renamed">File rinominato</string>
+    <string name="toast_file_renamed_error">Errore nella rinominazione del file</string>
     <string name="toast_file_exists">Il file già esiste. Scegliere un nome differente.</string>
     <string name="toast_scheduledrecording_timeerror_start_after_end">Ora iniziale successiva all\'ora finale</string>
     <string name="toast_scheduledrecording_timeerror_past">Registrazione pianificata nel passato</string>
-    <string name="toast_scheduledrecording_saved">La registrazione pianificata è stata salvata</string>
     <string name="toast_scheduledrecording_saved_error">Errore. Controllare che il tempo sia compatibile con le altre registrazioni.</string>
     <string name="toast_scheduledrecording_timeerror_already_scheduled">Un\'altra registrazione è già pianificata per l\'orario selezionato!</string>
-    <string name="toast_scheduledrecording_deleted_error">Errore nell\'eliminazione  della registrazione pianificata!</string>
-    <string name="toast_scheduledrecording_deleted">Elemento cancellato con successo</string>
     <string name="toast_permissions_denied">L\'app non funzionerà senza i permessi richiesti!</string>
 
 

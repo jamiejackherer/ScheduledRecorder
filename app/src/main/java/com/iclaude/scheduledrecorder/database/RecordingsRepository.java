@@ -176,10 +176,10 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
     }
 
     @Override
-    public void deleteScheduledRecordings(OperationResult callback, ScheduledRecording... recordings) {
-        checkNotNull(recordings);
+    public void deleteScheduledRecording(ScheduledRecording recording, OperationResult callback) {
+        checkNotNull(recording);
         Runnable deleteRunnable = () -> {
-            int num = recordingsDao.deleteScheduledRecordings(recordings);
+            int num = recordingsDao.deleteScheduledRecording(recording);
 
             appExecutors.mainThread().execute(() -> {
                 if (callback == null) return;

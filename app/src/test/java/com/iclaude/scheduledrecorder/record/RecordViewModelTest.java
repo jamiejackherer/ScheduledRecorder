@@ -68,7 +68,7 @@ public class RecordViewModelTest {
 
         when(iBinder.getService()).thenReturn(recordingService);
         when(context.getString(R.string.toast_recording_start)).thenReturn("Recording started");
-        when(context.getString(R.string.toast_recording_finish)).thenReturn("Recording saved to");
+        when(context.getString(R.string.toast_recording_saved)).thenReturn("Recording saved to");
     }
 
     @Test
@@ -119,7 +119,7 @@ public class RecordViewModelTest {
         onRecordingStatusChangedListenerArgumentCaptor.getValue().onRecordingStopped("file_path");
         assertFalse(recordViewModel.serviceRecording.get());
         assertEquals(0, recordViewModel.secondsElapsed.get());
-        verify(observer).onChanged(R.string.toast_recording_finish);
+        verify(observer).onChanged(R.string.toast_recording_saved);
 
         // Disconnect and stop Service.
         Intent stopIntent = new Intent(context, RecordingService.class);
@@ -159,7 +159,7 @@ public class RecordViewModelTest {
         onRecordingStatusChangedListenerArgumentCaptor.getValue().onRecordingStopped("file_path");
         assertFalse(recordViewModel.serviceRecording.get());
         assertEquals(0, recordViewModel.secondsElapsed.get());
-        verify(observer).onChanged(R.string.toast_recording_finish);
+        verify(observer).onChanged(R.string.toast_recording_saved);
 
         // Disconnect service automatically
         serviceConnectionArgumentCaptor.getValue().onServiceDisconnected(componentName);

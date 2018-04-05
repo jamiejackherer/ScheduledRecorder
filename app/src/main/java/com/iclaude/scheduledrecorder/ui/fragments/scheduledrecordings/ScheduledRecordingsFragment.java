@@ -6,7 +6,6 @@
 package com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -22,28 +21,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.iclaude.scheduledrecorder.R;
-import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
+import com.iclaude.scheduledrecorder.databinding.FragmentScheduledRecordingsBinding;
 import com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsActivity;
 import com.iclaude.scheduledrecorder.utils.PermissionsManager;
-import com.melnykov.fab.FloatingActionButton;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-import static com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface.OperationResult;
+import java.util.Objects;
 
 /**
  * This Fragment shows all scheduled recordings using a CalendarView.
@@ -51,21 +42,18 @@ import static com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterfa
  * Created by iClaude on 16/08/2017.
  */
 
-public class ScheduledRecordingsFragment extends Fragment implements ScheduledRecordingsFragmentItemAdapter.MyOnItemClickListener {
+public class ScheduledRecordingsFragment extends Fragment {
 
-    private final String TAG = "SCHEDULED_RECORDER_TAG";
     private static final String ARG_POSITION = "position";
     private static final int REQUEST_DANGEROUS_PERMISSIONS = 0;
     private final boolean marshmallow = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
 
     private CompactCalendarView calendarView;
-    private TextView tvMonth;
-    private TextView tvDate;
 
     private ScheduledRecordingsViewModel viewModel;
-    private RecyclerView.Adapter adapter;
-    private List<ScheduledRecording> scheduledRecordings;
-    private Date selectedDate = new Date(System.currentTimeMillis());
+    private RecyclerViewListAdapter adapter;
+    private List<ScheduledRecording> scheduledRecordings = new ArrayList<>();
+
 
     public static ScheduledRecordingsFragment newInstance(int position) {
         ScheduledRecordingsFragment f = new ScheduledRecordingsFragment();
@@ -77,117 +65,93 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         viewModel = ViewModelProviders.of(this).get(ScheduledRecordingsViewModel.class);
+
+        // Observables.
         viewModel.getScheduledRecordings().observe(this, scheduledRecordings -> {
-            updateUI(scheduledRecordings);
+            viewModel.dataAvailable.set(scheduledRecordings != null && !scheduledRecordings.isEmpty());
+            this.scheduledRecordings = scheduledRecordings;
+            updateCalendarView(Objects.requireNonNull(scheduledRecordings));
+        });
+
+        viewModel.getScheduledRecordingsFiltered().observe(this,
+                scheduledRecordings -> adapter.submitList(scheduledRecordings));
+
+        // Commands.
+        viewModel.getAddCommand().observe(this, aVoid -> checkPermissionsAndSchedule());
+        viewModel.getEditCommand().observe(this, this::editScheduledRecording);
+        viewModel.getLongClickItemEvent().observe(this, this::deleteScheduledRecording);
+        viewModel.getDeleteCommand().observe(this, msgId -> {
+            if(msgId != null)
+                Toast.makeText(getActivity(),getString(msgId), Toast.LENGTH_SHORT).show();
         });
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_scheduled_recordings, container, false);
+        FragmentScheduledRecordingsBinding binding = FragmentScheduledRecordingsBinding.inflate(inflater, container, false);
+        binding.setViewModel(viewModel);
+        View rootView = binding.getRoot();
 
-        // Title.
-        tvMonth = v.findViewById(R.id.tvMonth);
-        String month = new SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().getTime());
-        tvMonth.setText(month);
         // Calendar view.
-        calendarView = v.findViewById(R.id.compactcalendar_view);
+        calendarView = rootView.findViewById(R.id.compactcalendar_view);
         calendarView.setListener(myCalendarViewListener);
+        calendarView.setCurrentDate(viewModel.selectedDate.get());
+        updateCalendarView(scheduledRecordings);
+
         // List of events for the selected day.
-        RecyclerView recyclerView = v.findViewById(R.id.rvRecordings);
+        RecyclerView recyclerView = rootView.findViewById(R.id.rvRecordings);
+        recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        scheduledRecordings = new ArrayList<>();
-        adapter = new ScheduledRecordingsFragmentItemAdapter(scheduledRecordings, this, recyclerView);
+        adapter = new RecyclerViewListAdapter(new ScheduledRecordingDiffCallback(), viewModel);
         recyclerView.setAdapter(adapter);
-        // Selected day.
-        tvDate = v.findViewById(R.id.tvDate);
-        // Add new scheduled recording button.
-        FloatingActionButton mRecordButton = v.findViewById(R.id.fab_add);
-        mRecordButton.setColorNormal(ContextCompat.getColor(getActivity(), R.color.primary));
-        mRecordButton.setColorPressed(ContextCompat.getColor(getActivity(), R.color.primary_dark));
-        mRecordButton.setOnClickListener(addScheduledRecordingListener);
 
-        myCalendarViewListener.onDayClick(selectedDate);// click to show current day
-        calendarView.setCurrentDate(selectedDate);
-
-        return v;
+        return rootView;
     }
 
     // Listener for the CompactCalendarView.
     private final CompactCalendarView.CompactCalendarViewListener myCalendarViewListener = new CompactCalendarView.CompactCalendarViewListener() {
         @Override
         public void onDayClick(Date date) {
-            selectedDate = date;
-            displayScheduledRecordings(date);
+            viewModel.setSelectedDate(date);
         }
 
         @Override
         public void onMonthScroll(Date date) {
-            DateFormat dateFormat = new SimpleDateFormat("MMMM", Locale.getDefault());
-            String month = dateFormat.format(date);
-            tvMonth.setText(month);
+            viewModel.selectedMonth.set(date);
         }
     };
 
-    // Display the list of scheduled recordings for the selected day.
-    private void displayScheduledRecordings(Date date) {
-        List<Event> events = calendarView.getEvents(date.getTime());
-        // Put the events in a list of ScheduledRecording suitable for the adapter.
-        scheduledRecordings.clear();
-        for (Event event : events) {
-            scheduledRecordings.add((ScheduledRecording) event.getData());
-        }
-        Collections.sort(scheduledRecordings);
-        ((ScheduledRecordingsFragmentItemAdapter) adapter).setItems(scheduledRecordings);
-        adapter.notifyDataSetChanged();
-
-        tvDate.setText(new SimpleDateFormat("EEEE d", Locale.getDefault()).format(date));
-    }
-
-
-    // Update the UI with the list of scheduled recordings.
-    private void updateUI(List<ScheduledRecording> scheduledRecordings) {
+    private void updateCalendarView(List<ScheduledRecording> scheduledRecordings) {
         calendarView.removeAllEvents();
         for (ScheduledRecording item : scheduledRecordings) {
-            Event event = new Event(ContextCompat.getColor(getActivity(), R.color.accent), item.getStart(), item);
+            Event event = new Event(ContextCompat.getColor(Objects.requireNonNull(getActivity()), R.color.accent), item.getStart(), item);
             calendarView.addEvent(event, false);
         }
-        calendarView.invalidate(); // refresh the calendar view
-        myCalendarViewListener.onDayClick(selectedDate); // click to show current day
+        calendarView.postInvalidate(); // refresh the calendar view
+        myCalendarViewListener.onDayClick(viewModel.selectedDate.get()); // click to show current day...
+        viewModel.selectedMonth.set(viewModel.selectedDate.get()); // ...and month
     }
 
-    // Click listener for the elements of the RecyclerView (for editing scheduled recordings).
-    @Override
-    public void onItemClick(ScheduledRecording item) {
+    // Click on a scheduled recording.
+    private void editScheduledRecording(ScheduledRecording item) {
         Intent intent = ScheduledRecordingDetailsActivity.makeIntent(getActivity(), item.getId());
         startActivity(intent);
     }
 
-    // Long click listener for the elements of the RecyclerView (for deleting or renaming scheduled recordings).
-    @Override
-    public void onItemLongClick(ScheduledRecording item) {
+    // Long click on a scheduled recording.
+    private void deleteScheduledRecording(ScheduledRecording item) {
         // Item delete confirm
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.dialog_title_delete));
         builder.setMessage(R.string.dialog_text_delete_generic);
         builder.setPositiveButton(R.string.dialog_action_ok,
-                (dialogInterface, i) -> viewModel.deleteScheduledRecording(item, new OperationResult() {
-                    @Override
-                    public void onSuccess() {
-                        deleteItemCompleted(true);
-                    }
-
-                    @Override
-                    public void onFailure() {
-                        deleteItemCompleted(false);
-                    }
-                }));
+                (dialogInterface, i) -> viewModel.deleteScheduledRecording(item));
         builder.setCancelable(true);
         builder.setNegativeButton(getString(R.string.dialog_action_cancel),
                 (dialog, id) -> dialog.cancel());
@@ -195,20 +159,6 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-    // The item has just been deleted.
-    private void deleteItemCompleted(boolean success) {
-        Activity activity = getActivity();
-        if (success) {
-            Toast.makeText(activity, activity.getString(R.string.toast_scheduledrecording_deleted), Toast.LENGTH_SHORT).show();
-            activity.startService(ScheduledRecordingService.makeIntent(activity, false));
-        } else {
-            Toast.makeText(activity, activity.getString(R.string.toast_scheduledrecording_deleted_error), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // Click listener of the button to add a new scheduled recording.
-    private final View.OnClickListener addScheduledRecordingListener = view -> checkPermissionsAndSchedule();
 
     // Check dangerous permissions for Android Marshmallow+.
     private void checkPermissionsAndSchedule() {
@@ -234,18 +184,13 @@ public class ScheduledRecordingsFragment extends Fragment implements ScheduledRe
         }
 
         if (granted)
-            startActivity(ScheduledRecordingDetailsActivity.makeIntent(getActivity(), selectedDate.getTime()));
+            startActivity(ScheduledRecordingDetailsActivity.makeIntent(getActivity(), Objects.requireNonNull(viewModel.selectedDate.get()).getTime()));
         else
             Toast.makeText(getActivity(), getString(R.string.toast_permissions_denied), Toast.LENGTH_LONG).show();
     }
 
     private void startScheduledRecordingDetailsActivity() {
-        Intent intent = ScheduledRecordingDetailsActivity.makeIntent(getActivity(), selectedDate.getTime());
+        Intent intent = ScheduledRecordingDetailsActivity.makeIntent(getActivity(), Objects.requireNonNull(viewModel.selectedDate.get()).getTime());
         startActivity(intent);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

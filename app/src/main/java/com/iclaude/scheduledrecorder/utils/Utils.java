@@ -58,6 +58,17 @@ public class Utils {
         return dateFormat.format(new Date(time));
     }
 
+    // Format date in "Sunday 21" like format.
+    public static String formatDateDayNumber(Date date) {
+        return new SimpleDateFormat("EEEE d", Locale.getDefault()).format(date);
+    }
+
+    // Gets the name of the month ("January") from a Date.
+    public static String formatDateMonthName(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("MMMM", Locale.getDefault());
+        return dateFormat.format(date);
+    }
+
     // Format time in hh:mm format.
     public static String formatTime(long time) {
         DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
@@ -94,5 +105,28 @@ public class Utils {
     public static String formatSecondsElapsedForChronometer(int seconds) {
         SimpleDateFormat mTimerFormat = new SimpleDateFormat("mm:ss", Locale.getDefault());
         return mTimerFormat.format(new Date(seconds * 1000L));
+    }
+
+    // Given a Date, returns the long value for the time at 00:00 of that particular day.
+    public static long getDayStartTimeLong(Date date) {
+        Calendar calCmd = new GregorianCalendar();
+        calCmd.setTimeInMillis(date.getTime());
+        calCmd.set(Calendar.HOUR, 0);
+        calCmd.set(Calendar.MINUTE, 0);
+        calCmd.set(Calendar.SECOND, 0);
+        calCmd.set(Calendar.MILLISECOND, 0);
+        return calCmd.getTimeInMillis();
+    }
+
+    // Given a Date, returns the long value for the time at 00:00 of the next day.
+    public static long getDayEndTimeLong(Date date) {
+        Calendar calCmd = new GregorianCalendar();
+        calCmd.setTimeInMillis(date.getTime());
+        calCmd.add(Calendar.DATE, 1);
+        calCmd.set(Calendar.HOUR, 0);
+        calCmd.set(Calendar.MINUTE, 0);
+        calCmd.set(Calendar.SECOND, 0);
+        calCmd.set(Calendar.MILLISECOND, 0);
+        return calCmd.getTimeInMillis();
     }
 }

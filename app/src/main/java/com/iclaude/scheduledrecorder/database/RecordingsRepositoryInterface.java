@@ -60,7 +60,7 @@ public interface RecordingsRepositoryInterface {
 
     void updateScheduledRecordings(OperationResult callback, ScheduledRecording... recordings);
 
-    void deleteScheduledRecordings(OperationResult callback, ScheduledRecording... recordings);
+    void deleteScheduledRecording(ScheduledRecording recording, OperationResult callback);
 
     void deleteOldScheduledRecordings(long time, OperationResult callback);
 

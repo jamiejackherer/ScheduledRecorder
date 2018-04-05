@@ -187,7 +187,7 @@ public class ScheduledRecordingDetailsActivity extends AppCompatActivity impleme
         }
 
         // Recording saved.
-        Toast.makeText(ScheduledRecordingDetailsActivity.this, getString(R.string.toast_scheduledrecording_saved), Toast.LENGTH_SHORT).show();
+        Toast.makeText(ScheduledRecordingDetailsActivity.this, getString(R.string.toast_recording_saved), Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         startService(ScheduledRecordingService.makeIntent(ScheduledRecordingDetailsActivity.this, false));
         finish();

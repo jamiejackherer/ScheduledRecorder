@@ -94,12 +94,12 @@ public class FileViewerViewModel extends AndroidViewModel {
         recordingsRepository.updateRecording(recording, newName, getApplication(), new RecordingsRepositoryInterface.OperationResult() {
             @Override
             public void onSuccess() {
-                updateCommand.setValue(R.string.toast_file_rename);
+                updateCommand.setValue(R.string.toast_file_renamed);
             }
 
             @Override
             public void onFailure() {
-                updateCommand.setValue(R.string.toast_file_rename_error);
+                updateCommand.setValue(R.string.toast_file_renamed_error);
             }
         });
     }
@@ -112,12 +112,12 @@ public class FileViewerViewModel extends AndroidViewModel {
         recordingsRepository.deleteRecording(recording, new RecordingsRepositoryInterface.OperationResult() {
             @Override
             public void onSuccess() {
-                deleteCommand.setValue(R.string.toast_file_delete);
+                deleteCommand.setValue(R.string.toast_recording_deleted);
             }
 
             @Override
             public void onFailure() {
-                deleteCommand.setValue(R.string.toast_file_delete_error);
+                deleteCommand.setValue(R.string.toast_recording_deleted_error);
             }
         });
     }

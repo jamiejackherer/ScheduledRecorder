@@ -140,7 +140,7 @@ public class FileViewerViewModelTest {
         operationResultCaptor.getValue().onSuccess();
 
         // Verify the value received by the observer.
-        verify(observer).onChanged(R.string.toast_file_delete);
+        verify(observer).onChanged(R.string.toast_recording_deleted);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class FileViewerViewModelTest {
         operationResultCaptor.getValue().onFailure();
 
         // Verify the value received by the observer.
-        verify(observer).onChanged(R.string.toast_file_delete_error);
+        verify(observer).onChanged(R.string.toast_recording_deleted_error);
     }
 
     @Test
@@ -170,7 +170,7 @@ public class FileViewerViewModelTest {
         operationResultCaptor.getValue().onSuccess();
 
         // Verify the value received by the observer.
-        verify(observer).onChanged(R.string.toast_file_rename);
+        verify(observer).onChanged(R.string.toast_file_renamed);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class FileViewerViewModelTest {
         operationResultCaptor.getValue().onFailure();
 
         // Verify the value received by the observer.
-        verify(observer).onChanged(R.string.toast_file_rename_error);
+        verify(observer).onChanged(R.string.toast_file_renamed_error);
     }
 
     private void loadRecordings(List<Recording> recordings) {

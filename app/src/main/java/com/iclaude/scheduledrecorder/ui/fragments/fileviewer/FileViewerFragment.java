@@ -85,7 +85,6 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
         binding.setViewModel(viewModel);
         View rootView = binding.getRoot();
 
-
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(context);
