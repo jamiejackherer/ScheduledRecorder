@@ -10,6 +10,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.support.annotation.VisibleForTesting;
 
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.SingleLiveEvent;
@@ -55,10 +56,15 @@ public class ScheduledRecordingsViewModel extends ViewModel {
         App.getComponent().inject(this);
     }
 
+    @VisibleForTesting()
+    public ScheduledRecordingsViewModel(RecordingsRepository recordingsRepository) {
+        this.recordingsRepository = recordingsRepository;
+    }
+
     // Observables.
     public LiveData<List<ScheduledRecording>> getScheduledRecordings() {
         if(listLive != null)
-            return listLive;
+            return listLive; // we already have the list cached and there are no changes
 
         dataLoading.set(true);
         listLive = recordingsRepository.getAllScheduledRecordings();
@@ -73,7 +79,7 @@ public class ScheduledRecordingsViewModel extends ViewModel {
     }
 
     private void filterList() {
-        if(listLive.getValue() == null)
+        if(listLive == null || listLive.getValue() == null)
             return;
 
         long filterStart = Utils.getDayStartTimeLong(Objects.requireNonNull(selectedDate.get()));
