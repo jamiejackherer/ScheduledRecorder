@@ -25,7 +25,6 @@ import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.Sc
 import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.RESULT.SUCCESS;
 import static com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel.TIME_TYPE.TIME_START;
 import static java.util.Calendar.DAY_OF_MONTH;
-import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
@@ -146,7 +145,7 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
 
     public void setTime(TIME_TYPE timeType, int hour, int minute) {
         Calendar cal = timeType == TIME_START ? calStart : calEnd;
-        cal.set(HOUR, hour);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(MINUTE, minute);
         updateRecordingTimes(null);
     }

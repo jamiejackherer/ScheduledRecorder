@@ -110,6 +110,15 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
     }
 
     @Override
+    public void deleteAllRecordings() {
+        Runnable deleteRunnable = () -> {
+            recordingsDao.deleteAllRecordings();
+        };
+
+        appExecutors.diskIO().execute(deleteRunnable);
+    }
+
+    @Override
     public void getRecordingById(int id, GetRecordingCallback callback) {
         Runnable runnable = () -> {
             final Recording recording = recordingsDao.getRecordingById(id);
@@ -190,6 +199,15 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
                     callback.onFailure();
             });
         };
+        appExecutors.diskIO().execute(deleteRunnable);
+    }
+
+    @Override
+    public void deleteAllScheduledRecordings() {
+        Runnable deleteRunnable = () -> {
+            recordingsDao.deleteAllScheduledRecordings();
+        };
+
         appExecutors.diskIO().execute(deleteRunnable);
     }
 

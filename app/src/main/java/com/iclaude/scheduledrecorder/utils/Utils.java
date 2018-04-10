@@ -45,10 +45,17 @@ public class Utils {
         return Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
-    // Format date (date, time in short format).
+    // Format date and time in short format.
     public static String formatDateTimeShort(long time) {
         Date timeAdded = new Date(time);
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        return df.format(timeAdded);
+    }
+
+    // Format date in short format.
+    public static String formatDateShort(long time) {
+        Date timeAdded = new Date(time);
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         return df.format(timeAdded);
     }
 
@@ -92,7 +99,7 @@ public class Utils {
     public static int getHourFromTimeMillis(long timeMillis) {
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(timeMillis);
-        return cal.get(Calendar.HOUR);
+        return cal.get(Calendar.HOUR_OF_DAY);
     }
 
     public static int getMinuteFromTimeMillis(long timeMillis) {
@@ -111,7 +118,7 @@ public class Utils {
     public static long getDayStartTimeLong(Date date) {
         Calendar calCmd = new GregorianCalendar();
         calCmd.setTimeInMillis(date.getTime());
-        calCmd.set(Calendar.HOUR, 0);
+        calCmd.set(Calendar.HOUR_OF_DAY, 0);
         calCmd.set(Calendar.MINUTE, 0);
         calCmd.set(Calendar.SECOND, 0);
         calCmd.set(Calendar.MILLISECOND, 0);
@@ -122,11 +129,10 @@ public class Utils {
     public static long getDayEndTimeLong(Date date) {
         Calendar calCmd = new GregorianCalendar();
         calCmd.setTimeInMillis(date.getTime());
-        calCmd.add(Calendar.DATE, 1);
-        calCmd.set(Calendar.HOUR, 0);
-        calCmd.set(Calendar.MINUTE, 0);
-        calCmd.set(Calendar.SECOND, 0);
-        calCmd.set(Calendar.MILLISECOND, 0);
+        calCmd.set(Calendar.HOUR_OF_DAY, 23);
+        calCmd.set(Calendar.MINUTE, 59);
+        calCmd.set(Calendar.SECOND, 59);
+        calCmd.set(Calendar.MILLISECOND, 999);
         return calCmd.getTimeInMillis();
     }
 }

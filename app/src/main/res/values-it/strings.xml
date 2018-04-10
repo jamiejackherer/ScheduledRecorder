@@ -7,8 +7,8 @@
     <string name="action_settings">Impostazioni</string>
     <string name="action_save">Salva</string>
     <string name="tab_title_record">Registra</string>
-    <string name="tab_title_saved_recordings">Registrazioni salvate</string>
-    <string name="tab_title_scheduled_recordings">Registrazioni pianificate</string>
+    <string name="tab_title_saved_recordings">File</string>
+    <string name="tab_title_scheduled_recordings">Pianifica</string>
 
 
     <!-- Toasts -->
@@ -52,7 +52,7 @@
     <string name="no_saved_recordings_message">Nessuna registrazione salvata</string>
     <string name="pause_recording_button">Pausa</string>
     <string name="resume_recording_button">Riprendi</string>
-    <string name="default_file_name">Le mie registrazioni</string>
+    <string name="default_file_name">myrec</string>
     <string name="record_prompt">Premi il bottone per iniziare a registrare</string>
     <string name="record_in_progress">Registrazione in corso…</string>
 

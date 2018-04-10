@@ -36,6 +36,8 @@ public interface RecordingsRepositoryInterface {
 
     void deleteRecording(Recording recording, OperationResult callback);
 
+    void deleteAllRecordings();
+
     void getRecordingById(int id, GetRecordingCallback callback);
 
     LiveData<List<Recording>> getAllRecordings();
@@ -61,6 +63,8 @@ public interface RecordingsRepositoryInterface {
     void updateScheduledRecordings(OperationResult callback, ScheduledRecording... recordings);
 
     void deleteScheduledRecording(ScheduledRecording recording, OperationResult callback);
+
+    void deleteAllScheduledRecordings();
 
     void deleteOldScheduledRecordings(long time, OperationResult callback);
 

@@ -34,6 +34,7 @@ import javax.inject.Inject;
 
 public class ScheduledRecordingsViewModel extends ViewModel {
 
+    private static final String TAG = "SCHEDULED_RECORDER_TAG";
     @Inject
     RecordingsRepository recordingsRepository;
 
@@ -69,7 +70,6 @@ public class ScheduledRecordingsViewModel extends ViewModel {
         dataLoading.set(true);
         listLive = recordingsRepository.getAllScheduledRecordings();
         dataLoading.set(false);
-        filterList();
 
         return listLive;
     }
@@ -78,7 +78,7 @@ public class ScheduledRecordingsViewModel extends ViewModel {
         return listFilteredLive;
     }
 
-    private void filterList() {
+    public void filterList() {
         if(listLive == null || listLive.getValue() == null)
             return;
 
@@ -87,7 +87,7 @@ public class ScheduledRecordingsViewModel extends ViewModel {
 
         List<ScheduledRecording> scheduledRecordingsFiltered = new ArrayList<>();
         for(ScheduledRecording rec : listLive.getValue()) {
-            if((rec.getStart() >= filterStart && rec.getStart() < filterEnd) || (rec.getEnd() >= filterStart && rec.getEnd() < filterEnd))
+            if ((rec.getStart() >= filterStart && rec.getStart() <= filterEnd) || (rec.getEnd() >= filterStart && rec.getEnd() <= filterEnd))
                 scheduledRecordingsFiltered.add(rec);
         }
 

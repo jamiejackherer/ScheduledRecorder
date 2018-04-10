@@ -8,7 +8,6 @@ package com.iclaude.scheduledrecorder.didagger2;
 import com.iclaude.scheduledrecorder.RecordingService;
 import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
-import com.iclaude.scheduledrecorder.ui.activities.AddScheduledRecordingActivity;
 import com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsViewModel;
 import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerViewModel;
 import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsFragment;
@@ -24,6 +23,8 @@ import dagger.Component;
 @Component(modules = {AppModule.class, DatabaseModule.class})
 @Singleton
 public interface AppComponent {
+
+    // App.
     void inject(RecordingService recordingService);
 
     void inject(ScheduledRecordingService scheduledRecordingService);
@@ -35,8 +36,6 @@ public interface AppComponent {
     void inject(ScheduledRecordingsViewModel scheduledRecordingsViewModel);
 
     void inject(ScheduledRecordingsFragment scheduledRecordingsFragment);
-
-    void inject(AddScheduledRecordingActivity addScheduledRecordingActivity);
 
     void inject(ScheduledRecordingDetailsViewModel scheduledRecordingDetailsViewModel);
 }

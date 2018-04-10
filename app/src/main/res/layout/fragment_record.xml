@@ -21,16 +21,15 @@
             android:id="@+id/btnRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="16dp"
+            android:enabled="@{viewModel.serviceConnected ? true : false}"
+            android:src="@{viewModel.serviceConnected &amp;&amp; viewModel.serviceRecording ? @drawable/ic_media_stop : @drawable/ic_mic_white_36dp}"
             app:backgroundTint="@color/primary"
             app:fabSize="normal"
-            app:fab_colorNormal="@color/primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            tools:src="@drawable/ic_mic_white_36dp"
-            android:enabled="@{viewModel.serviceConnected ? true : false}"
-            android:src="@{viewModel.serviceConnected &amp;&amp; viewModel.serviceRecording ? @drawable/ic_media_stop : @drawable/ic_mic_white_36dp}"/>
+            tools:src="@drawable/ic_mic_white_36dp" />
 
         <TextView
             android:id="@+id/tvChronometer"

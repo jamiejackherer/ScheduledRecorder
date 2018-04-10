@@ -27,9 +27,11 @@ public interface RecordingsDao {
     @Delete
     int deleteRecording(Recording recording);
 
+    @Query("DELETE FROM saved_recordings")
+    void deleteAllRecordings();
+
     @Query("SELECT * FROM saved_recordings WHERE id = :id")
     Recording getRecordingById(int id);
-
 
     @Query("SELECT * FROM saved_recordings ORDER BY time_added DESC")
     LiveData<List<Recording>> getAllRecordings();
@@ -47,6 +49,9 @@ public interface RecordingsDao {
 
     @Delete
     int deleteScheduledRecording(ScheduledRecording scheduledRecording);
+
+    @Query("DELETE FROM scheduled_recordings")
+    void deleteAllScheduledRecordings();
 
     @Query("DELETE FROM scheduled_recordings WHERE start_time < :time")
     int deleteOldScheduledRecordings(long time);

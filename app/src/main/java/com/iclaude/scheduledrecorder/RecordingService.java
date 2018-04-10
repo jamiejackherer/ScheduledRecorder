@@ -213,7 +213,7 @@ public class RecordingService extends Service {
     }
 
     private void setFileNameAndPath() {
-        mFileName = "rec" + System.currentTimeMillis();
+        mFileName = "myrec" + System.currentTimeMillis();
         mFilePath = Utils.getDirectoryPath(this) + "/" + mFileName;
     }
 

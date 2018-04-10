@@ -14,10 +14,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+
 /**
  * This Fragment shows all scheduled recordings using a CalendarView.
  * <p>
@@ -43,6 +46,8 @@ import java.util.Objects;
  */
 
 public class ScheduledRecordingsFragment extends Fragment {
+
+    private static final String TAG = "SCHEDULED_RECORDER_TAG";
 
     private static final String ARG_POSITION = "position";
     private static final int REQUEST_DANGEROUS_PERMISSIONS = 0;
@@ -75,10 +80,15 @@ public class ScheduledRecordingsFragment extends Fragment {
             viewModel.dataAvailable.set(scheduledRecordings != null && !scheduledRecordings.isEmpty());
             this.scheduledRecordings = scheduledRecordings;
             updateCalendarView(Objects.requireNonNull(scheduledRecordings));
+            viewModel.filterList();
         });
 
         viewModel.getScheduledRecordingsFiltered().observe(this,
-                scheduledRecordings -> adapter.submitList(scheduledRecordings));
+                scheduledRecordings -> {
+                    adapter.submitList(scheduledRecordings);
+                    Log.d(TAG, "list filtered");
+                }
+                );
 
         // Commands.
         viewModel.getAddCommand().observe(this, aVoid -> checkPermissionsAndSchedule());
@@ -98,6 +108,8 @@ public class ScheduledRecordingsFragment extends Fragment {
         View rootView = binding.getRoot();
 
         // Calendar view.
+        viewModel.setSelectedDate(viewModel.selectedDate.get());
+        viewModel.selectedMonth.set(viewModel.selectedDate.get());
         calendarView = rootView.findViewById(R.id.compactcalendar_view);
         calendarView.setListener(myCalendarViewListener);
         calendarView.setCurrentDate(viewModel.selectedDate.get());
@@ -134,8 +146,6 @@ public class ScheduledRecordingsFragment extends Fragment {
             calendarView.addEvent(event, false);
         }
         calendarView.postInvalidate(); // refresh the calendar view
-        myCalendarViewListener.onDayClick(viewModel.selectedDate.get()); // click to show current day...
-        viewModel.selectedMonth.set(viewModel.selectedDate.get()); // ...and month
     }
 
     // Click on a scheduled recording.
@@ -192,5 +202,10 @@ public class ScheduledRecordingsFragment extends Fragment {
     private void startScheduledRecordingDetailsActivity() {
         Intent intent = ScheduledRecordingDetailsActivity.makeIntent(getActivity(), Objects.requireNonNull(viewModel.selectedDate.get()).getTime());
         startActivity(intent);
+    }
+
+    @VisibleForTesting
+    public void clickOnDay(Date date) {
+        getActivity().runOnUiThread(() -> myCalendarViewListener.onDayClick(date));
     }
 }

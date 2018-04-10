@@ -12,6 +12,7 @@ package com.iclaude.scheduledrecorder.ui.activities;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,7 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.RecordingService;
 import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerFragment;
@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(new MyAdapter(getSupportFragmentManager()));
-        PagerSlidingTabStrip tabs = findViewById(R.id.tabs);
-        tabs.setViewPager(pager);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(pager);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat_Light);
