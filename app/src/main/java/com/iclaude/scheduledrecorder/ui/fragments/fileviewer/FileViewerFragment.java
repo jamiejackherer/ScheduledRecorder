@@ -10,12 +10,16 @@ import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +34,7 @@ import com.iclaude.scheduledrecorder.ui.fragments.PlaybackFragment;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /**
@@ -43,6 +48,7 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
     private FileViewerViewModel viewModel;
     private RecyclerViewListAdapter adapter;
     private Context context;
+    private RecyclerViewSwipeCallback swipeController;
 
     public static FileViewerFragment newInstance(int position) {
         FileViewerFragment f = new FileViewerFragment();
@@ -66,9 +72,7 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
 
         viewModel = ViewModelProviders.of(this).get(FileViewerViewModel.class);
 
-        viewModel.getRecordings().observe(this, recordings -> {
-            adapter.submitList(recordings);
-        });
+        viewModel.getRecordings().observe(this, recordings -> adapter.submitList(recordings));
 
         viewModel.getPlayRecordingEvent().observe(this, this::playRecording);
 
@@ -85,12 +89,42 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
         binding.setViewModel(viewModel);
         View rootView = binding.getRoot();
 
+        // List of recordings.
+
+        // RecyclerView setup.
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(context);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        adapter = new RecyclerViewListAdapter(new RecordingDiffCallback(), viewModel);
+        GridLayoutManager layoutManager = new GridLayoutManager(context, context.getResources().getInteger(R.integer.fileviewer_num_columns));
+        recyclerView.setLayoutManager(layoutManager);
+
+        // Swipe controller.
+        swipeController = new RecyclerViewSwipeCallback(new SwipeControllerActions() {
+            @Override
+            public void shareFile(int position) {
+                FileViewerFragment.this.shareFile(adapter.getRecordingFromPosition(position));
+            }
+
+            @Override
+            public void renameFile(int position) {
+                FileViewerFragment.this.renameFile(adapter.getRecordingFromPosition(position));
+            }
+
+            @Override
+            public void deleteFile(int position) {
+                FileViewerFragment.this.deleteFile(adapter.getRecordingFromPosition(position));
+            }
+        }, getActivity());
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
+
+        // Adapter.
+        adapter = new RecyclerViewListAdapter(new RecordingDiffCallback(), viewModel, swipeController);
         recyclerView.setAdapter(adapter);
 
         return rootView;
@@ -101,7 +135,7 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
     public void playRecording(Recording recording) {
         try {
             PlaybackFragment playbackFragment = new PlaybackFragment().newInstance(recording);
-            playbackFragment.show((getActivity().getFragmentManager()), "dialog_playback");
+            playbackFragment.show((Objects.requireNonNull(getActivity()).getFragmentManager()), "dialog_playback");
         } catch (Exception e) {
             Log.e(TAG, CLASS_NAME + ": error in playing the recording" + e.toString());
         }
@@ -120,12 +154,16 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.dialog_title_options));
         builder.setItems(items, (dialog, item) -> {
-            if (item == 0) {
-                shareFile(recording);
-            } else if (item == 1) {
-                renameFile(recording);
-            } else if (item == 2) {
-                deleteFile(recording);
+            switch (item) {
+                case 0:
+                    shareFile(recording);
+                    break;
+                case 1:
+                    renameFile(recording);
+                    break;
+                case 2:
+                    deleteFile(recording);
+                    break;
             }
         });
         builder.setCancelable(true);
@@ -139,9 +177,12 @@ public class FileViewerFragment extends Fragment implements RecordingUserActions
     // Share.
     @Override
     public void shareFile(Recording recording) {
+        Uri fileUri = FileProvider.getUriForFile(getActivity(), "com.iclaude.scheduledrecorder.provider",
+                new File(recording.getPath()));
+
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(recording.getPath())));
+        shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
         shareIntent.setType("audio/mp4");
         context.startActivity(Intent.createChooser(shareIntent, context.getText(R.string.send_to)));
     }

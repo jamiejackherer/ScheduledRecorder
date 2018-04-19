@@ -1,0 +1,5 @@
+<resources>
+    <!-- Fragment fragment_file_viewer. -->
+    <dimen name="fileviewer_horizontal_margin">0dp</dimen>
+
+</resources>

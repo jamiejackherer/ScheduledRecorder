@@ -36,22 +36,22 @@
             android:textColor="?android:attr/textColorPrimary"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/tvColor"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/default_horizontal_margin"
             android:text="@{Utils.formatTime(scheduledRecording.start)}" />
 
         <TextView
             android:id="@+id/tvEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="@dimen/default_vertical_margin"
+            android:layout_marginTop="@dimen/default_vertical_margin"
             tools:text="11:00"
             android:textColor="?android:attr/textColorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvStart"
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintLeft_toRightOf="@+id/tvColor"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/default_horizontal_margin"
             android:text="@{Utils.formatTime(scheduledRecording.end)}" />
 
         <TextView
@@ -69,6 +69,7 @@
             android:id="@+id/tvColor"
             android:layout_width="8dp"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/default_horizontal_margin"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
             app:layout_constraintBottom_toBottomOf="parent"

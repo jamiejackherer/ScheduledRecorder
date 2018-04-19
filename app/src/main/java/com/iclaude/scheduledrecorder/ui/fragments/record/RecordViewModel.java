@@ -2,14 +2,18 @@ package com.iclaude.scheduledrecorder.ui.fragments.record;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableInt;
+import android.media.MediaRecorder;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.RecordingService;
@@ -24,10 +28,14 @@ import static com.iclaude.scheduledrecorder.RecordingService.OnRecordingStatusCh
  */
 public class RecordViewModel extends AndroidViewModel {
 
+    private static final String TAG = "SCHEDULED_RECORDER_TAG";
+
+
     public final ObservableBoolean serviceConnected = new ObservableBoolean(false);
     public final ObservableBoolean serviceRecording = new ObservableBoolean(false);
     public final ObservableInt secondsElapsed = new ObservableInt(0);
     private final SingleLiveEvent<Integer> toastMsg = new SingleLiveEvent<>();
+    private final MutableLiveData<Integer> amplitudeLive = new MutableLiveData<>();
 
     private RecordingService recordingService;
 
@@ -71,10 +79,14 @@ public class RecordViewModel extends AndroidViewModel {
         return toastMsg;
     }
 
+    public LiveData<Integer> getAmplitudeLive() {
+        return amplitudeLive;
+    }
+
     /*
-           Implementation of ServiceConnection interface.
-           The interaction with the Service is managed by this view model.
-       */
+       Implementation of ServiceConnection interface.
+       The interaction with the Service is managed by this view model.
+   */
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -120,10 +132,16 @@ public class RecordViewModel extends AndroidViewModel {
         public void onTimerChanged(int seconds) {
             secondsElapsed.set(seconds);
         }
+
+        @Override
+        public void onAmplitudeInfo(int amplitude) {
+            amplitudeLive.postValue(amplitude);
+        }
     };
 
     @VisibleForTesting
     public RecordingService getRecordingService() {
         return recordingService;
     }
+
 }

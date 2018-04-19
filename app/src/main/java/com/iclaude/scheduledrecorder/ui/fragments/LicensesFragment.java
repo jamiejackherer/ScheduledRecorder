@@ -9,7 +9,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.iclaude.scheduledrecorder.R;
@@ -20,12 +19,10 @@ import com.iclaude.scheduledrecorder.R;
 public class LicensesFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater dialogInflater = getActivity().getLayoutInflater();
-        View openSourceLicensesView = dialogInflater.inflate(R.layout.fragment_licenses, null);
+        View openSourceLicensesView = View.inflate(getActivity(), R.layout.fragment_info, null);
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setView(openSourceLicensesView)
-                .setTitle((getString(R.string.dialog_title_licenses)))
                 .setNeutralButton(android.R.string.ok, null);
 
         return dialogBuilder.create();

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- About -->
-    <string name="link">Website: github.com/dkim0419/SoundRecorder</string>
 
     <!-- Toolbar -->
     <string name="app_name">Scheduled Recorder</string>
@@ -25,11 +23,14 @@
     <string name="toast_scheduledrecording_timeerror_already_scheduled">Another recording has already been scheduled for that time!</string>
     <string name="toast_scheduledrecording_saved_error">Error. Check that the time is compatible with other recordings.</string>
     <string name="toast_permissions_denied">The app won\'t work without the requested permissions!</string>
+    <string name="toast_undo_delete_error">Error! The recording can\'t be restored</string>
 
 
     <!-- Notifications -->
     <string name="notification_recording">Recording...</string>
     <string name="notification_recording_text">SoundRecorder is currently recording...</string>
+    <string name="notification_scheduling">Scheduling...</string>
+    <string name="notification_scheduling_text">Scheduling next recording...</string>
 
     <!-- Dialogs -->
     <string name="dialog_title_delete">Confirm Delete...</string>
@@ -54,16 +55,23 @@
     <string name="pause_recording_button">Pause</string>
     <string name="resume_recording_button">Resume</string>
     <string name="default_file_name">myrec</string>
-    <string name="record_prompt">Tap the button to start recording</string>
+    <string name="record_prompt">Tap to start recording</string>
     <string name="record_in_progress">Recording…</string>
 
     <string name="send_to">Send to</string>
+
+    <!-- SnackBar -->
+    <string name="snackbar_undo">Undo</string>
+    <string name="snackbar_recording_deleted">Recording deleted</string>
 
     <!-- Fragments -->
     <string name="frag_sched_title">Scheduled recordings</string>
     <string name="frag_sched_scheduled_recording">scheduled recording</string>
     <string name="frag_sched_no_recordings">no scheduled recordings</string>
     <string name="act_addsched_schedule_recording">Schedule recording</string>
+
+    <string name="audioview_recording">recording...</string>
+    <string name="audioview_waiting">waiting...</string>
 
     <string name="new_message_notification_title_template">New message: %1$s</string>
 
@@ -86,5 +94,14 @@
     <!-- General -->
     <string name="image_content_description">content_description</string>
 
+    <!-- App's info -->
+    <string name="info_appname">Scheduled Recorder</string>
+    <string name="info_version">ver. 1.0</string>
+    <string name="info_desc">Audio recorder with scheduled recordings</string>
+    <string name="info_author">by iClaude</string>
+    <string name="info_details_title">Nerd\'s details</string>
+    <string name="info_details_content">This app is open source. The app implements (or at least tries to...) the MVVM pattern with clean architecture using Android Data Binding Library and architecture components (Room, ViewModel, LiveData).</string>
+    <string name="info_github_title">GitHub repository</string>
+    <string name="info_github_link">https://github.com/iClaude/ScheduledRecorder</string>
 
 </resources>

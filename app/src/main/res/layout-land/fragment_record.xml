@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.iclaude.scheduledrecorder.utils.Utils" />
+
+        <variable
+            name="viewModel"
+            type="com.iclaude.scheduledrecorder.ui.fragments.record.RecordViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/fragment_record"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/expanded_vertical_margin"
+            android:layout_marginEnd="@dimen/expanded_horizontal_margin"
+            android:enabled="@{viewModel.serviceConnected ? true : false}"
+            android:src="@{viewModel.serviceConnected &amp;&amp; viewModel.serviceRecording ? @drawable/ic_media_stop : @drawable/ic_mic_white_36dp}"
+            app:backgroundTint="@color/primary"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:src="@drawable/ic_mic_white_36dp" />
+
+        <TextView
+            android:id="@+id/tvChronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@{Utils.formatSecondsElapsedForChronometer(viewModel.secondsElapsed)}"
+            android:textColor="@color/primary_text"
+            android:textSize="60sp"
+            app:layout_constraintBottom_toBottomOf="@+id/recordProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/recordProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/recordProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/recordProgressBar"
+            tools:text="00:00" />
+
+        <ProgressBar
+            android:id="@+id/recordProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="180dp"
+            android:layout_height="180dp "
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="@dimen/default_horizontal_margin"
+            android:layout_marginStart="@dimen/default_horizontal_margin"
+            android:layout_marginTop="@dimen/expanded_vertical_margin"
+            android:background="@drawable/record_progress_bar_background"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/record_progress_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.25" />
+
+        <Button
+            android:id="@+id/btnPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/ic_media_pause"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/pause_recording_button"
+            android:textAllCaps="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/recording_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/expanded_horizontal_margin"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@{viewModel.serviceConnected &amp;&amp; viewModel.serviceRecording ? @string/record_in_progress : @string/record_prompt}"
+            android:textColor="@color/primary_text"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btnRecord"
+            app:layout_constraintEnd_toStartOf="@id/btnRecord"
+            app:layout_constraintTop_toTopOf="@+id/btnRecord"
+            tools:text="@string/record_prompt" />
+
+
+        <!-- Audio visualizer -->
+        <com.iclaude.scheduledrecorder.ui.fragments.record.AudioLevelView
+            android:id="@+id/audio_view"
+            android:layout_width="0dp"
+            android:layout_height="144dp"
+            android:layout_marginEnd="@dimen/expanded_horizontal_margin"
+            android:layout_marginStart="@dimen/expanded_horizontal_margin"
+            android:layout_marginTop="@dimen/expanded_vertical_margin"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

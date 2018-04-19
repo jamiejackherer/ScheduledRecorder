@@ -8,14 +8,19 @@ package com.iclaude.scheduledrecorder;
 
 import android.Manifest;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -49,7 +54,7 @@ import static android.media.MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACH
 public class RecordingService extends Service {
     private static final String TAG = "SCHEDULED_RECORDER_TAG";
     private final String CLASS_NAME = getClass().getSimpleName();
-    private static final String EXTRA_ACTIVITY_STARTER = "com.danielkim.soundrecorder.EXTRA_ACTIVITY_STARTER";
+    private static final String EXTRA_ACTIVITY_STARTER = "com.iclaude.scheduledrecorder.EXTRA_ACTIVITY_STARTER";
     private static final int ONGOING_NOTIFICATION = 1;
 
     @Inject
@@ -59,7 +64,7 @@ public class RecordingService extends Service {
     private String mFilePath = null;
     private MediaRecorder mRecorder = null;
     private long mStartingTimeMillis = 0;
-    private int mElapsedSeconds = 0;
+    private long mElapsedMillis = 0;
 
     private TimerTask mIncrementTimerTask = null;
 
@@ -104,11 +109,12 @@ public class RecordingService extends Service {
         recording:
         - recording started
         - recording stopped (with file path)
-        - seconds elapsed
+        - seconds elapsed and max amplitude (useful for graphical effects)
      */
     public interface OnRecordingStatusChangedListener {
         void onRecordingStarted();
         void onTimerChanged(int seconds);
+        void onAmplitudeInfo(int amplitude);
         void onRecordingStopped(String filePath);
     }
 
@@ -134,7 +140,7 @@ public class RecordingService extends Service {
                             int duration = (int) (recording.getEnd() - recording.getStart());
                             // Remove scheduled recording from database and schedule next recording.
                             recordingsRepository.deleteScheduledRecording(recording,null);
-                            startService(ScheduledRecordingService.makeIntent(RecordingService.this, false));
+                            startService(ScheduledRecordingService.makeIntent(RecordingService.this));
 
                             if (!isRecording && hasPermissions()) {
                                 startRecording(duration);
@@ -219,17 +225,26 @@ public class RecordingService extends Service {
 
     private void startTimer() {
         Timer mTimer = new Timer();
-        mElapsedSeconds = 0;
+
+        // Increment seconds.
+        mElapsedMillis = 0;
         mIncrementTimerTask = new TimerTask() {
             @Override
             public void run() {
-                mElapsedSeconds++;
+                mElapsedMillis += 100;
                 if (onRecordingStatusChangedListener != null) {
-                    onRecordingStatusChangedListener.onTimerChanged(mElapsedSeconds);
+                    onRecordingStatusChangedListener.onTimerChanged((int) mElapsedMillis / 1000);
+                }
+                if (onRecordingStatusChangedListener != null && mRecorder != null) {
+                    try {
+                        onRecordingStatusChangedListener.onAmplitudeInfo(mRecorder.getMaxAmplitude());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
-        mTimer.scheduleAtFixedRate(mIncrementTimerTask, 1000, 1000);
+        mTimer.scheduleAtFixedRate(mIncrementTimerTask, 100, 100);
     }
 
     public void stopRecording() {
@@ -273,8 +288,17 @@ public class RecordingService extends Service {
     }
 
     private Notification createNotification() {
+        String channelId;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channelId = createNotificationChannel();
+        } else {
+            // If earlier version channel ID is not used
+            // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
+            channelId = "";
+        }
+
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getApplicationContext())
+                new NotificationCompat.Builder(getApplicationContext(), channelId)
                         .setSmallIcon(R.drawable.ic_mic_white_36dp)
                         .setContentTitle(getString(R.string.notification_recording))
                         .setContentText(getString(R.string.notification_recording_text))
@@ -284,6 +308,18 @@ public class RecordingService extends Service {
                 new Intent[]{new Intent(getApplicationContext(), MainActivity.class)}, PendingIntent.FLAG_UPDATE_CURRENT));
 
         return mBuilder.build();
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private String createNotificationChannel() {
+        String channelId = "recording_service";
+        String channelName = "Recording Service";
+        NotificationChannel chan = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(chan);
+        return channelId;
     }
 
     public boolean isRecording() {

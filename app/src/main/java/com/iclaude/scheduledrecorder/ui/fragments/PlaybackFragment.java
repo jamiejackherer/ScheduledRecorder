@@ -94,10 +94,10 @@ public class PlaybackFragment extends DialogFragment{
         mCurrentProgressTextView = (TextView) view.findViewById(R.id.current_progress_text_view);
 
         mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
-        ColorFilter filter = new LightingColorFilter
+/*        ColorFilter filter = new LightingColorFilter
                 (getResources().getColor(R.color.primary), getResources().getColor(R.color.primary));
         mSeekBar.getProgressDrawable().setColorFilter(filter);
-        mSeekBar.getThumb().setColorFilter(filter);
+        mSeekBar.getThumb().setColorFilter(filter);*/
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

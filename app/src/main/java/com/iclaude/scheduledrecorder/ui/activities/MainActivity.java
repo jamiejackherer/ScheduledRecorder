@@ -16,7 +16,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -30,11 +29,9 @@ import com.iclaude.scheduledrecorder.ui.fragments.record.RecordViewModel;
 import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsFragment;
 
 
-
-/*
-    TODO delete all unused classes.
- */
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "SCHEDULED_RECORDER_TAG";
 
     private RecordViewModel recordViewModel; // manages connection with RecordingService
 
@@ -44,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager pager = findViewById(R.id.pager);
+        ViewPagerNoSwipe pager = findViewById(R.id.pager);
+        pager.setSwipingEnabled(false);
         pager.setAdapter(new MyAdapter(getSupportFragmentManager()));
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(pager);

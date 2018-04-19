@@ -36,7 +36,6 @@ class RecyclerViewListAdapter extends ListAdapter<ScheduledRecording, RecyclerVi
 
             @Override
             public boolean onLongClick(ScheduledRecording scheduledRecording) {
-                viewModel.showLongClickDialogOptions(scheduledRecording);
                 return true;
             }
         };
@@ -48,5 +47,9 @@ class RecyclerViewListAdapter extends ListAdapter<ScheduledRecording, RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewViewHolder holder, int position) {
         holder.bind(getItem(position), position);
+    }
+
+    public ScheduledRecording getItemFromPosition(int position) {
+        return getItem(position);
     }
 }

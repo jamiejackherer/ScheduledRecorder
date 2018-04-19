@@ -15,10 +15,12 @@ import com.iclaude.scheduledrecorder.databinding.FragmentFileViewerItemBinding;
 public class RecyclerViewListAdapter extends ListAdapter<Recording, RecyclerViewViewHolder> {
 
     private final FileViewerViewModel fileViewerViewModel;
+    private final RecyclerViewSwipeCallback swipeCallback;
 
-    public RecyclerViewListAdapter(@NonNull DiffUtil.ItemCallback<Recording> diffCallback, FileViewerViewModel fileViewerViewModel) {
+    public RecyclerViewListAdapter(@NonNull DiffUtil.ItemCallback<Recording> diffCallback, FileViewerViewModel fileViewerViewModel, RecyclerViewSwipeCallback swipeCallback) {
         super(diffCallback);
         this.fileViewerViewModel = fileViewerViewModel;
+        this.swipeCallback = swipeCallback;
     }
 
     @NonNull
@@ -29,12 +31,20 @@ public class RecyclerViewListAdapter extends ListAdapter<Recording, RecyclerView
         RecordingItemUserActionListener listener = new RecordingItemUserActionListener() {
             @Override
             public void onClick(Recording recording) {
-                fileViewerViewModel.playRecording(recording);
+                if(swipeCallback.buttonsAreVisible())
+                    swipeCallback.restoreLayout();
+                else
+                    fileViewerViewModel.playRecording(recording);
             }
 
             @Override
             public boolean onLongClick(Recording recording) {
-                fileViewerViewModel.showLongClickDialogOptions(recording);
+                if(swipeCallback.buttonsAreVisible())
+                    swipeCallback.restoreLayout();
+                //else
+                    // actions to perform on long click
+                    //fileViewerViewModel.showLongClickDialogOptions(recording);
+
                 return true;
             }
         };
@@ -42,7 +52,12 @@ public class RecyclerViewListAdapter extends ListAdapter<Recording, RecyclerView
 
         return new RecyclerViewViewHolder(binding);
     }
+
     public void onBindViewHolder(@NonNull RecyclerViewViewHolder holder, int position) {
         holder.bind(getItem(position));
+    }
+
+    public Recording getRecordingFromPosition(int position) {
+        return getItem(position);
     }
 }

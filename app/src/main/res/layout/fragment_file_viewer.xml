@@ -21,6 +21,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/fileviewer_horizontal_margin"
+            android:layout_marginEnd="@dimen/fileviewer_horizontal_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/fragment_file_viewer_item"

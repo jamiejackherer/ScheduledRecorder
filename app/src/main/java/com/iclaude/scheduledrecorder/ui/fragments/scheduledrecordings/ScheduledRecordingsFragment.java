@@ -6,7 +6,6 @@
 package com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,11 +14,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.iclaude.scheduledrecorder.R;
+import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
 import com.iclaude.scheduledrecorder.databinding.FragmentScheduledRecordingsBinding;
 import com.iclaude.scheduledrecorder.ui.activities.scheduled_recording.ScheduledRecordingDetailsActivity;
@@ -47,17 +49,17 @@ import java.util.Objects;
 
 public class ScheduledRecordingsFragment extends Fragment {
 
-    private static final String TAG = "SCHEDULED_RECORDER_TAG";
-
     private static final String ARG_POSITION = "position";
     private static final int REQUEST_DANGEROUS_PERMISSIONS = 0;
     private final boolean marshmallow = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
 
+    private CoordinatorLayout coordinatorLayout;
     private CompactCalendarView calendarView;
 
     private ScheduledRecordingsViewModel viewModel;
     private RecyclerViewListAdapter adapter;
     private List<ScheduledRecording> scheduledRecordings = new ArrayList<>();
+    private ScheduledRecording deletedRecording;
 
 
     public static ScheduledRecordingsFragment newInstance(int position) {
@@ -84,19 +86,23 @@ public class ScheduledRecordingsFragment extends Fragment {
         });
 
         viewModel.getScheduledRecordingsFiltered().observe(this,
-                scheduledRecordings -> {
-                    adapter.submitList(scheduledRecordings);
-                    Log.d(TAG, "list filtered");
-                }
+                scheduledRecordings -> adapter.submitList(scheduledRecordings)
                 );
 
         // Commands.
         viewModel.getAddCommand().observe(this, aVoid -> checkPermissionsAndSchedule());
         viewModel.getEditCommand().observe(this, this::editScheduledRecording);
-        viewModel.getLongClickItemEvent().observe(this, this::deleteScheduledRecording);
         viewModel.getDeleteCommand().observe(this, msgId -> {
-            if(msgId != null)
-                Toast.makeText(getActivity(),getString(msgId), Toast.LENGTH_SHORT).show();
+            if(msgId != null) {
+                showDeletedSnackbar();
+                Objects.requireNonNull(getActivity()).startService(ScheduledRecordingService.makeIntent(getActivity())); // schedule next recording
+            }
+        });
+        viewModel.getUndoDeleteCommand().observe(this, success -> {
+            if(success)
+                Objects.requireNonNull(getActivity()).startService(ScheduledRecordingService.makeIntent(getActivity())); // schedule next recording
+            else
+                Toast.makeText(getActivity(), getString(R.string.toast_undo_delete_error), Toast.LENGTH_LONG).show();
         });
     }
 
@@ -106,6 +112,8 @@ public class ScheduledRecordingsFragment extends Fragment {
         FragmentScheduledRecordingsBinding binding = FragmentScheduledRecordingsBinding.inflate(inflater, container, false);
         binding.setViewModel(viewModel);
         View rootView = binding.getRoot();
+
+        coordinatorLayout = rootView.findViewById(R.id.coordinatorLayout);
 
         // Calendar view.
         viewModel.setSelectedDate(viewModel.selectedDate.get());
@@ -122,7 +130,16 @@ public class ScheduledRecordingsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RecyclerViewListAdapter(new ScheduledRecordingDiffCallback(), viewModel);
         recyclerView.setAdapter(adapter);
-
+        // Swipe-to-delete callback.
+        RecyclerViewSwipeToDeleteCallback callback = new RecyclerViewSwipeToDeleteCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, getActivity()) {
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                deletedRecording = adapter.getItemFromPosition(viewHolder.getAdapterPosition());
+                viewModel.deleteScheduledRecording(deletedRecording);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         return rootView;
     }
 
@@ -152,22 +169,6 @@ public class ScheduledRecordingsFragment extends Fragment {
     private void editScheduledRecording(ScheduledRecording item) {
         Intent intent = ScheduledRecordingDetailsActivity.makeIntent(getActivity(), item.getId());
         startActivity(intent);
-    }
-
-    // Long click on a scheduled recording.
-    private void deleteScheduledRecording(ScheduledRecording item) {
-        // Item delete confirm
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.dialog_title_delete));
-        builder.setMessage(R.string.dialog_text_delete_generic);
-        builder.setPositiveButton(R.string.dialog_action_ok,
-                (dialogInterface, i) -> viewModel.deleteScheduledRecording(item));
-        builder.setCancelable(true);
-        builder.setNegativeButton(getString(R.string.dialog_action_cancel),
-                (dialog, id) -> dialog.cancel());
-
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     // Check dangerous permissions for Android Marshmallow+.
@@ -204,8 +205,17 @@ public class ScheduledRecordingsFragment extends Fragment {
         startActivity(intent);
     }
 
+    private void showDeletedSnackbar() {
+        Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, getString(R.string.snackbar_recording_deleted), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.snackbar_undo), view -> viewModel.undoDelete());
+        snackbar.show();
+
+    }
+
     @VisibleForTesting
     public void clickOnDay(Date date) {
-        getActivity().runOnUiThread(() -> myCalendarViewListener.onDayClick(date));
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> myCalendarViewListener.onDayClick(date));
     }
+
 }

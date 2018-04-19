@@ -37,6 +37,7 @@ public class ScheduledRecordingsViewModel extends ViewModel {
     private static final String TAG = "SCHEDULED_RECORDER_TAG";
     @Inject
     RecordingsRepository recordingsRepository;
+    private ScheduledRecording deletedRecording;
 
     // Observables.
     private LiveData<List<ScheduledRecording>> listLive;
@@ -49,8 +50,8 @@ public class ScheduledRecordingsViewModel extends ViewModel {
     // Commands.
     private final SingleLiveEvent<Void> addCommand = new SingleLiveEvent<>();
     private final SingleLiveEvent<ScheduledRecording> editCommand = new SingleLiveEvent<>();
-    private final SingleLiveEvent<ScheduledRecording> longClickItemEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Integer> deleteCommand = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Boolean> undoDeleteCommand = new SingleLiveEvent<>();
 
 
     public ScheduledRecordingsViewModel() {
@@ -117,28 +118,45 @@ public class ScheduledRecordingsViewModel extends ViewModel {
         editCommand.setValue(scheduledRecording);
     }
 
-    public SingleLiveEvent<ScheduledRecording> getLongClickItemEvent() {
-        return longClickItemEvent;
-    }
-
-    public void showLongClickDialogOptions(ScheduledRecording scheduledRecording) {
-        longClickItemEvent.setValue(scheduledRecording);
-    }
-
     public SingleLiveEvent<Integer> getDeleteCommand() {
         return deleteCommand;
+    }
+
+    public SingleLiveEvent<Boolean> getUndoDeleteCommand() {
+        return undoDeleteCommand;
     }
 
     public void deleteScheduledRecording(ScheduledRecording scheduledRecording) {
         recordingsRepository.deleteScheduledRecording(scheduledRecording, new RecordingsRepositoryInterface.OperationResult() {
             @Override
             public void onSuccess() {
+                deletedRecording = scheduledRecording;
                 deleteCommand.setValue(R.string.toast_recording_deleted);
             }
 
             @Override
             public void onFailure() {
                 deleteCommand.setValue(R.string.toast_recording_deleted_error);
+            }
+        });
+    }
+
+    public void undoDelete() {
+        if(deletedRecording == null) {
+            undoDeleteCommand.setValue(false);
+            return;
+        }
+
+        recordingsRepository.insertScheduledRecording(deletedRecording, new RecordingsRepositoryInterface.OperationResult() {
+            @Override
+            public void onSuccess() {
+                deletedRecording = null;
+                undoDeleteCommand.setValue(true);
+            }
+
+            @Override
+            public void onFailure() {
+                undoDeleteCommand.setValue(false);
             }
         });
     }

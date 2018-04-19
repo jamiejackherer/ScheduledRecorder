@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2017. This code was written by iClaude. All rights reserved.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+        <import type="com.iclaude.scheduledrecorder.utils.Utils" />
+
+        <variable
+            name="viewModel"
+            type="com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UnusedAttribute">
+
+        <ProgressBar
+            android:id="@+id/progressBar3"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/expanded_vertical_margin"
+            android:visibility="@{viewModel.dataLoading ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/tvDate" />
+
+        <com.github.sundeepk.compactcalendarview.CompactCalendarView
+            android:id="@+id/compactcalendar_view"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:layout_marginBottom="@dimen/reduced_vertical_margin"
+            android:layout_marginEnd="@dimen/reduced_horizontal_margin"
+            android:layout_marginStart="@dimen/reduced_horizontal_margin"
+            android:layout_marginTop="@dimen/reduced_vertical_margin"
+            app:compactCalendarBackgroundColor="#ffffffff"
+            app:compactCalendarCurrentDayBackgroundColor="@color/primary"
+            app:compactCalendarCurrentSelectedDayBackgroundColor="@color/accent"
+            app:compactCalendarMultiEventIndicatorColor="#fff"
+            app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"
+            app:compactCalendarTextColor="@color/primary_text"
+            app:compactCalendarTextSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMonth"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tvMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:text="@{Utils.formatDateMonthName(viewModel.selectedMonth)}"
+            android:textColor="?android:attr/textColorPrimary"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="August" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:text="@{Utils.formatDateDayNumber(viewModel.selectedDate)}"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Sunday 21" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/expanded_vertical_margin"
+            android:text="@string/no_data"
+            android:visibility="@{!viewModel.dataLoading &amp;&amp; !viewModel.dataAvailable ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/tvDate" />
+
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/expanded_horizontal_margin"
+            android:layout_marginTop="@dimen/reduced_vertical_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/tvDate">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvRecordings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/reduced_horizontal_margin"
+                android:layout_marginEnd="@dimen/reduced_horizontal_margin"
+                android:layout_marginBottom="@dimen/default_vertical_margin"
+                android:layout_marginTop="@dimen/default_vertical_margin"
+                tools:listitem="@layout/fragment_scheduled_recordings_item" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/expanded_vertical_margin"
+                android:layout_marginEnd="@dimen/expanded_horizontal_margin"
+                android:onClick="@{() -> viewModel.addScheduledRecording()}"
+                app:backgroundTint="@color/primary"
+                app:fabSize="normal"
+                app:layout_anchor="@id/rvRecordings"
+                app:layout_anchorGravity="bottom|right|end"
+                app:layout_behavior="com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScrollAwareFABBehavior"
+                app:srcCompat="@drawable/ic_add_white_24dp" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</layout>

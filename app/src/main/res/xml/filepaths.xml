@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path path="SoundRecorder/" name="SoundRecorder" />
+    <files-path path="." name="internal" />
+    <external-files-path
+        name="external"
+        path="ScheduledRecorder" />
 </paths>

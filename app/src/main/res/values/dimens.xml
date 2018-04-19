@@ -1,7 +1,18 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- Default screen margins. -->
+    <dimen name="default_horizontal_margin">8dp</dimen>
+    <dimen name="expanded_horizontal_margin">16dp</dimen>
+    <dimen name="reduced_horizontal_margin">4dp</dimen>
+    <dimen name="default_vertical_margin">8dp</dimen>
+    <dimen name="expanded_vertical_margin">16dp</dimen>
+    <dimen name="reduced_vertical_margin">4dp</dimen>
 
-    <dimen name="tab_indicator_height">5dp</dimen>
+    <!-- CardView parameters. -->
+    <dimen name="cardview_margin">5dp</dimen>
+    <dimen name="cardview_cornerRadius">4dp</dimen>
+    <dimen name="cardview_elevation">3dp</dimen>
+
+    <!-- Fragment fragment_file_viewer. -->
+    <dimen name="fileviewer_horizontal_margin">0dp</dimen>
+
 </resources>

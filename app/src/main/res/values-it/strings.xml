@@ -24,11 +24,14 @@
     <string name="toast_scheduledrecording_saved_error">Errore. Controllare che il tempo sia compatibile con le altre registrazioni.</string>
     <string name="toast_scheduledrecording_timeerror_already_scheduled">Un\'altra registrazione è già pianificata per l\'orario selezionato!</string>
     <string name="toast_permissions_denied">L\'app non funzionerà senza i permessi richiesti!</string>
+    <string name="toast_undo_delete_error">Errore! La registrazione non può essere ripristinata</string>
 
 
     <!-- Notifications -->
     <string name="notification_recording">Registrazione...</string>
     <string name="notification_recording_text">SoundRecorder sta registrando...</string>
+    <string name="notification_scheduling">Programmazione...</string>
+    <string name="notification_scheduling_text">Programmazione prossima registrazione...</string>
 
     <!-- Dialogs -->
     <string name="dialog_title_delete">Conferma cancellazione</string>
@@ -53,10 +56,14 @@
     <string name="pause_recording_button">Pausa</string>
     <string name="resume_recording_button">Riprendi</string>
     <string name="default_file_name">myrec</string>
-    <string name="record_prompt">Premi il bottone per iniziare a registrare</string>
+    <string name="record_prompt">Premi per registrare</string>
     <string name="record_in_progress">Registrazione in corso…</string>
 
     <string name="send_to">Invia a</string>
+
+    <!-- SnackBar -->
+    <string name="snackbar_undo">Annulla</string>
+    <string name="snackbar_recording_deleted">Registrazione eliminata</string>
 
     <!-- Fragments -->
     <string name="frag_sched_title">Registrazioni pianificate</string>
@@ -66,11 +73,19 @@
 
     <string name="new_message_notification_title_template">Nuovo messaggio: %1$s</string>
 
+    <string name="audioview_recording">registrazione...</string>
+    <string name="audioview_waiting">attesa...</string>
+
     <!-- ScheduledRecordingDetailsActivity -->
     <string name="no_data">dati non disponibili</string>
 
     <!-- Actions -->
     <string name="action_share">Condividi</string>
     <string name="action_reply">Rispondi</string>
+
+    <!-- App info -->
+    <string name="info_desc">Audio recorder con registrazioni programmabili</string>
+    <string name="info_details_title">Dettagli da nerd</string>
+    <string name="info_details_content">Questa app è open source. L\'app implementa (o almeno ci prova...) il pattern MVVM utilizzando la Data Binding Library e gli architecture components di Android (Room, ViewModel, LiveData).</string>
 
 </resources>

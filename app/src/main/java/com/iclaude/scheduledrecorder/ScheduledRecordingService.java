@@ -6,23 +6,31 @@
 package com.iclaude.scheduledrecorder;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
 import com.iclaude.scheduledrecorder.didagger2.App;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -38,6 +46,7 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
 
     private final int SCHEDULE_RECORDINGS = 1;
     private static final String TAG = "SCHEDULED_RECORDER_TAG";
+    private static final int ONGOING_NOTIFICATION = 1;
     protected static final String EXTRA_WAKEFUL = "com.danielkim.soundrecorder.WAKEFUL";
 
     @Inject
@@ -46,23 +55,18 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
     protected AlarmManager alarmManager;
     protected Context context;
     private Handler mHandler;
-    protected Intent startIntent;
 
     // Just for testing.
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static int onCreateCalls, onDestroyCalls, onStartCommandCalls;
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public static boolean wakeful;
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     private final LocalBinder localBinder = new LocalBinder();
 
     /*
         Static factory method used to create an Intent to start this Service.
     */
-    public static Intent makeIntent(Context context, boolean wakeful) {
-        Intent intent = new Intent(context, ScheduledRecordingService.class);
-        intent.putExtra(EXTRA_WAKEFUL, wakeful);
-        return intent;
+    public static Intent makeIntent(Context context) {
+        return new Intent(context, ScheduledRecordingService.class);
     }
 
     public ScheduledRecordingService() {
@@ -99,9 +103,7 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
     public int onStartCommand(Intent intent, int flags, int startId) {
         onStartCommandCalls++; // just for testing
 
-        // Is this a wakeful Service? In this case we have to release the wake-lock at the end.
-        wakeful = intent.getBooleanExtra(EXTRA_WAKEFUL, false);
-        startIntent = intent;
+        startForeground(ONGOING_NOTIFICATION, createNotification());
 
         Message message = mHandler.obtainMessage(SCHEDULE_RECORDINGS);
         mHandler.sendMessage(message);
@@ -114,9 +116,6 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
         if (message.what == SCHEDULE_RECORDINGS) {
             resetAlarmManager(); // cancel all pending alarms
             deleteOldRecordingsAndScheduleNext();
-            if (wakeful) {
-                BootUpReceiver.completeWakefulIntent(startIntent);
-            }
         }
 
         return true;
@@ -150,25 +149,64 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
             public void onSuccess(ScheduledRecording recording) {
                 if (recording != null) {
                     Intent intent = RecordingService.makeIntent(context, false);
-                    PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) { // up to API 18
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, recording.getStart(), pendingIntent);
-                    } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2 && Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) { // API 19-22
+
+                    PendingIntent pendingIntent;
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+                        pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    else
+                        pendingIntent = PendingIntent.getForegroundService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1)  // API 19-22
                         alarmManager.setExact(AlarmManager.RTC_WAKEUP, recording.getStart(), pendingIntent);
-                    } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) { // API 23+
+                     else  // API 23+
                         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, recording.getStart(), pendingIntent);
-                    }
+
                 }
+                stopForeground(true);
             }
 
             @Override
             public void onFailure() {
                 Log.e(TAG, getClass().getSimpleName() + " - scheduleNextRecording(): error in getting the next scheduled recording");
+                stopForeground(true);
             }
         };
 
         recordingsRepository.getNextScheduledRecording(callback);
     }
+
+    private Notification createNotification() {
+        String channelId;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channelId = createNotificationChannel();
+        } else {
+            // If earlier version channel ID is not used
+            // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
+            channelId = "";
+        }
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext(), channelId)
+                        .setSmallIcon(R.drawable.ic_mic_white_36dp)
+                        .setContentTitle(getString(R.string.notification_scheduling))
+                        .setContentText(getString(R.string.notification_scheduling_text))
+                        .setOngoing(true);
+
+        return mBuilder.build();
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private String createNotificationChannel() {
+        String channelId = "scheduled_recording_service";
+        String channelName = "Scheduled Recording Service";
+        NotificationChannel chan = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Objects.requireNonNull(notificationManager).createNotificationChannel(chan);
+        return channelId;
+    }
+
 
     /*
         Implementation of local binder pattern for testing purposes.

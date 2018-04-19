@@ -7,6 +7,7 @@ package com.iclaude.scheduledrecorder.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class Utils {
-
+    private static final String TAG = "SCHEDULED_RECORDER_TAG";
     /*
         Get, or create if necessary, the path of the directory where to save recordings.
      */
@@ -30,14 +31,13 @@ public class Utils {
         String directoryPath;
 
         if (isExternalStorageWritable()) {
-            directoryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SoundRecorder";
-            File f = new File(directoryPath);
-            boolean available = f.mkdirs() || f.isDirectory();
-            if (available)
-                return directoryPath;
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS), "ScheduledRecorder");
+            if (file.mkdirs()) {
+                return file.getAbsolutePath();
+            }
         }
 
-        return context.getFilesDir().getAbsolutePath();
+        return context.getFilesDir().getAbsolutePath(); // use internal storage if external storage is not available
     }
 
     private static boolean isExternalStorageWritable() {
@@ -134,5 +134,9 @@ public class Utils {
         calCmd.set(Calendar.SECOND, 59);
         calCmd.set(Calendar.MILLISECOND, 999);
         return calCmd.getTimeInMillis();
+    }
+
+    public static int convertDpToPixel(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
     }
 }
