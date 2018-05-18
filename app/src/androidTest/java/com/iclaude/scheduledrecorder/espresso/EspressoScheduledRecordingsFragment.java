@@ -3,14 +3,18 @@ package com.iclaude.scheduledrecorder.espresso;
 import android.Manifest;
 import android.app.Activity;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.iclaude.scheduledrecorder.R;
@@ -46,9 +50,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -60,6 +67,7 @@ import static org.hamcrest.Matchers.not;
  * Tests on ScheduledRecordingFragment.
  */
 public class EspressoScheduledRecordingsFragment {
+    private static final String TAG = "SCHEDULED_RECORDER_TAG";
 
     @Inject
     RecordingsRepository recordingsRepository;
@@ -104,6 +112,7 @@ public class EspressoScheduledRecordingsFragment {
         calNextMonth.add(Calendar.MONTH, 1);
         nextMonthMonth = Utils.formatDateMonthName(new Date(calNextMonth.getTimeInMillis()));
         nextMonthDay = Utils.formatDateDayNumber(new Date(calNextMonth.getTimeInMillis()));
+
     }
 
     // Swipe che calendar view: the month should be updated.
@@ -155,7 +164,7 @@ public class EspressoScheduledRecordingsFragment {
         checkDetailsActivityForRecording(calToday, 11, 50, 11, 55);
 
         // Go back and delete the recording.
-        deleteRecording(11, 50, 11, 55);
+        deleteRecording(0);
 
         // Check final (empty) state of the UI.
         checkInitialUI();
@@ -186,12 +195,12 @@ public class EspressoScheduledRecordingsFragment {
         checkDetailsActivityForRecording(calToday, 11, 56, 11, 59);
 
         // Delete 1st recording and check the UI.
-        deleteRecording(11, 50, 11, 55);
+        deleteRecording(0);
         checkRecordingNotInList(11, 50, 11, 55);
         checkRecordingInList(11, 56, 11, 59);
 
         // Delete 2nd recording.
-        deleteRecording(11, 56, 11, 59);
+        deleteRecording(0);
 
         // Check final (empty) state of the UI.
         checkInitialUI();
@@ -224,7 +233,7 @@ public class EspressoScheduledRecordingsFragment {
         checkDetailsActivityForRecording(calTomorrow, 10, 30, 10, 45);
 
         // Delete the recording of tomorrow and check that it's not longer in the list.
-        deleteRecording(10, 30, 10, 45);
+        deleteRecording(0);
         checkRecordingNotInList(10, 30, 10, 45);
 
         // Click on today and check that the recording of today is still there.
@@ -232,7 +241,7 @@ public class EspressoScheduledRecordingsFragment {
         checkRecordingInList(11, 50, 11, 55);
 
         // Delete the recording and check that it's no longer in the list.
-        deleteRecording(11, 50, 11 , 55);
+        deleteRecording(0);
         checkRecordingNotInList(11, 50, 11, 55);
 
         // Check that the UI is restored to its initial state.
@@ -374,9 +383,8 @@ public class EspressoScheduledRecordingsFragment {
         onView(withId(R.id.action_save)).perform(click());
     }
 
-    private void deleteRecording(int hourStart, int minuteStart, int hourEnd, int minuteEnd) {
-        onView(allOf(withText(R.string.frag_sched_scheduled_recording), hasSibling(withText(containsString("" + hourStart + ":" + minuteStart))), hasSibling(withText(containsString("" + hourEnd + ":" + minuteEnd))))).perform(longClick());
-        onView(anyOf(withText("OK"), withText("Done"))).perform(click());
+    private void deleteRecording(int pos) {
+        onView(withId(R.id.rvRecordings)).perform(RecyclerViewActions.actionOnItemAtPosition(pos, swipeLeft()));
     }
 
     // Click on a specific day in the calendar view.
@@ -438,4 +446,5 @@ public class EspressoScheduledRecordingsFragment {
         });
         return activity[0];
     }
+
 }

@@ -26,8 +26,8 @@ public class RecyclerViewSwipeCallback extends Callback {
 
     private static final String TAG = "SCHEDULED_RECORDER_TAG";
 
-    private static final int BUTTON_RIGHT_WIDTH_DP = 50;
-    private static final int BUTTON_LEFT_WIDTH_DP = 100;
+    public static final int BUTTON_RIGHT_WIDTH_DP = 50;
+    public static final int BUTTON_LEFT_WIDTH_DP = 100;
 
     private boolean swipeBack = false;
     private ButtonsState buttonShowedState = ButtonsState.GONE;

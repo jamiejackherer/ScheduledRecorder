@@ -55,7 +55,7 @@ public class RecordingService extends Service {
     private static final String TAG = "SCHEDULED_RECORDER_TAG";
     private final String CLASS_NAME = getClass().getSimpleName();
     private static final String EXTRA_ACTIVITY_STARTER = "com.iclaude.scheduledrecorder.EXTRA_ACTIVITY_STARTER";
-    private static final int ONGOING_NOTIFICATION = 1;
+    private static final int NOTIFICATION_RECORDING = 2;
 
     @Inject
     RecordingsRepository recordingsRepository;
@@ -138,13 +138,13 @@ public class RecordingService extends Service {
                         @Override
                         public void onSuccess(ScheduledRecording recording) {
                             int duration = (int) (recording.getEnd() - recording.getStart());
-                            // Remove scheduled recording from database and schedule next recording.
-                            recordingsRepository.deleteScheduledRecording(recording,null);
-                            startService(ScheduledRecordingService.makeIntent(RecordingService.this));
-
                             if (!isRecording && hasPermissions()) {
                                 startRecording(duration);
                             }
+
+                            // Remove scheduled recording from database and schedule next recording.
+                            recordingsRepository.deleteScheduledRecording(recording,null);
+                            startService(ScheduledRecordingService.makeIntent(RecordingService.this));
                         }
 
                         @Override
@@ -181,7 +181,7 @@ public class RecordingService extends Service {
     }
 
     public void startRecording(int duration) {
-        startForeground(ONGOING_NOTIFICATION, createNotification());
+        startForeground(NOTIFICATION_RECORDING, createNotification());
 
         setFileNameAndPath();
         mRecorder = new MediaRecorder();

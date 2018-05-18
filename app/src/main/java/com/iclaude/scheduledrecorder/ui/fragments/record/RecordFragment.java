@@ -100,7 +100,7 @@ public class RecordFragment extends Fragment {
                     firstCallback = false;
 
                     int secs = ((ObservableInt) sender).get();
-                    audioView.startRecording(secs);
+                    getActivity().runOnUiThread(() -> audioView.startRecording(secs));
                 }
             }
         };

@@ -46,7 +46,7 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
 
     private final int SCHEDULE_RECORDINGS = 1;
     private static final String TAG = "SCHEDULED_RECORDER_TAG";
-    private static final int ONGOING_NOTIFICATION = 1;
+    private static final int NOTIFICATION_SCHEDULING = 0;
     protected static final String EXTRA_WAKEFUL = "com.danielkim.soundrecorder.WAKEFUL";
 
     @Inject
@@ -103,7 +103,7 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
     public int onStartCommand(Intent intent, int flags, int startId) {
         onStartCommandCalls++; // just for testing
 
-        startForeground(ONGOING_NOTIFICATION, createNotification());
+        startForeground(NOTIFICATION_SCHEDULING, null);
 
         Message message = mHandler.obtainMessage(SCHEDULE_RECORDINGS);
         mHandler.sendMessage(message);
@@ -162,13 +162,14 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
                         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, recording.getStart(), pendingIntent);
 
                 }
-                stopForeground(true);
+
+                stopForeground(false);
             }
 
             @Override
             public void onFailure() {
                 Log.e(TAG, getClass().getSimpleName() + " - scheduleNextRecording(): error in getting the next scheduled recording");
-                stopForeground(true);
+                stopForeground(false);
             }
         };
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fragment fragment_record. -->
+    <dimen name="filerecord_chrono_size">180dp</dimen>
+    <dimen name="filerecord_chrono_textsize">56sp</dimen>
+
+</resources>

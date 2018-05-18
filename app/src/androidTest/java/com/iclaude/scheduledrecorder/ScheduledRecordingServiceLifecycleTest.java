@@ -41,7 +41,7 @@ public class ScheduledRecordingServiceLifecycleTest implements ServiceConnection
         ScheduledRecordingService.onDestroyCalls = 0;
         ScheduledRecordingService.onStartCommandCalls = 0;
 
-        Intent intent = ScheduledRecordingService.makeIntent(InstrumentationRegistry.getTargetContext(), false);
+        Intent intent = ScheduledRecordingService.makeIntent(InstrumentationRegistry.getTargetContext());
         // Call startService 3 times.
         mServiceRule.startService(intent);
         mServiceRule.startService(intent);
