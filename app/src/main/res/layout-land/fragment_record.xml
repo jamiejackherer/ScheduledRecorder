@@ -50,7 +50,6 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="@dimen/filerecord_chrono_size"
             android:layout_height="@dimen/filerecord_chrono_size"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="@dimen/default_horizontal_margin"
             android:layout_marginStart="@dimen/default_horizontal_margin"
             android:layout_marginTop="@dimen/expanded_vertical_margin"
@@ -59,11 +58,9 @@
             android:max="100"
             android:progress="0"
             android:progressDrawable="@drawable/record_progress_bar"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.25" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btnPause"
