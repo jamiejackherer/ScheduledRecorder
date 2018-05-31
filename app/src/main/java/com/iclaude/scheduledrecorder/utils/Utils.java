@@ -28,8 +28,6 @@ public class Utils {
         Get, or create if necessary, the path of the directory where to save recordings.
      */
     public static String getDirectoryPath(Context context) {
-        String directoryPath;
-
         if (isExternalStorageWritable()) {
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS), "ScheduledRecorder");
             if (file.mkdirs()) {
@@ -42,7 +40,7 @@ public class Utils {
 
     private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     // Format date and time in short format.

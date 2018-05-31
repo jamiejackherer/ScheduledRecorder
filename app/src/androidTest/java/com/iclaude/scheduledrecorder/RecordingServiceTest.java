@@ -4,10 +4,39 @@
 
 package com.iclaude.scheduledrecorder;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
+import android.support.test.rule.GrantPermissionRule;
+import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.iclaude.scheduledrecorder.database.RecordingsRepository;
+import com.iclaude.scheduledrecorder.didagger2.AppModule;
+import com.iclaude.scheduledrecorder.didagger2.DatabaseModule;
+import com.iclaude.scheduledrecorder.testutils.DaggerTestComponent;
+import com.iclaude.scheduledrecorder.utils.Utils;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.File;
+import java.util.concurrent.TimeoutException;
+
+import javax.inject.Inject;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Tests on RecordingService.
@@ -17,7 +46,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class RecordingServiceTest {
 
-/*    @Rule
+    @Rule
     public final ServiceTestRule mServiceRule = new ServiceTestRule() {
         @Override
         protected void afterService() {
@@ -34,9 +63,23 @@ public class RecordingServiceTest {
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO,
             Manifest.permission.READ_EXTERNAL_STORAGE);
 
-    *//*
+    @Inject
+    RecordingsRepository recordingsRepository;
+
+
+    @Before
+    public void setup() {
+        // Clear database before tests.
+        DaggerTestComponent.builder()
+                .appModule(new AppModule(InstrumentationRegistry.getTargetContext()))
+                .databaseModule(new DatabaseModule())
+                .build()
+                .inject(this);
+    }
+
+    /*
         Test that the Local Binder Pattern for this Service works correctly.
-     *//*
+     */
     @Test
     public void testLocalBinder() throws TimeoutException {
         // Create the service Intent.
@@ -55,10 +98,10 @@ public class RecordingServiceTest {
         mServiceRule.unbindService();
     }
 
-    *//*
+    /*
         Test that the Service's lifecycle methods are called the exact number of times in response
         to binding, unbinding and calls to startService.
-     *//*
+     */
     @Test
     public void testLifecyleMethodCalls() throws TimeoutException {
         // Create the service Intent.
@@ -78,9 +121,9 @@ public class RecordingServiceTest {
         assertEquals("onDestroy not called after unbinding from Service", 1, RecordingService.onCreateCalls);
     }
 
-    *//*
+    /*
         Test that the Service starts and stops recording when asked to.
-     *//*
+     */
     @Test
     public void testStartAndStopRecording() throws TimeoutException {
         // Bind to Service.
@@ -104,11 +147,11 @@ public class RecordingServiceTest {
 
     }
 
-    *//*
+    /*
         Test the interface used by the Service to communicate information to a connected
         Activity. Test that the interface communicates the right information when starting, stopping
         the Service and when the recording is ongoing.
-     *//*
+     */
     @Test
     public void testOnRecordingStatusChangedListener() throws TimeoutException {
         // Bind to Service.
@@ -140,18 +183,16 @@ public class RecordingServiceTest {
         service.setOnRecordingStatusChangedListener(null);
     }
 
-    *//*
+    /*
         Delete all the data added by the tests.
-     *//*
-    @AfterClass
-    public static void clean() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        // Clear database.
-        DBHelper dbHelper = new DBHelper(context);
-        dbHelper.restoreDatabase();
+     */
+    @After
+    public void clean() {
+        recordingsRepository.deleteAllRecordings();
+        recordingsRepository.deleteAllScheduledRecordings();
 
         // Delete all files created.
-        String mFilePath = Utils.getDirectoryPath(context);
+        String mFilePath = Utils.getDirectoryPath(InstrumentationRegistry.getTargetContext());
 
         File dir = new File(mFilePath);
         for (File file : dir.listFiles()) {
@@ -186,6 +227,11 @@ public class RecordingServiceTest {
             return recordingStarted;
         }
 
+        @Override
+        public void onAmplitudeInfo(int amplitude) {
+
+        }
+
         public boolean isRecordingStopped() {
             return recordingStopped;
         }
@@ -197,6 +243,7 @@ public class RecordingServiceTest {
         public String getFilePath() {
             return filePath;
         }
-    }*/
+
+    }
 
 }

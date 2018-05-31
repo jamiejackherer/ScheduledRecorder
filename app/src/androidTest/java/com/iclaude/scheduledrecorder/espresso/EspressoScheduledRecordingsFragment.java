@@ -257,22 +257,6 @@ public class EspressoScheduledRecordingsFragment {
         // Check that the recording is in the list.
         checkRecordingInList(11, 50, 11, 55);
 
-        // Click on tomorrow on the calendar view.
-        clickOnDay(calTomorrow);
-        // Add a scheduled recording.
-        addScheduledRecording(10, 30, 10, 45);
-        // Check that the recording is in the list for tomorrow and that the other recording is not displayed.
-        checkRecordingInList(10, 30, 10, 45);
-        checkRecordingNotInList(11, 50, 11, 55);
-
-        // Reopen the Fragment (onCreateView is called).
-        reopenFragment();
-
-        // Check that the recordings of tomorrow are correctly displayed.
-        checkDayAndMonth(calTomorrow, calTomorrow);
-        checkRecordingInList(10, 30, 10, 45);
-        checkRecordingNotInList(11, 50, 11, 55);
-
         // Change month and check that the data displayed is correct.
         onView(withId(R.id.tvMonth)).check(matches(withText(todayMonth)));
         onView(withId(R.id.compactcalendar_view)).perform(swipeLeft());
@@ -281,10 +265,9 @@ public class EspressoScheduledRecordingsFragment {
         // Reopen the Fragment.
         reopenFragment();
 
-        // Check that the month and recordings of tomorrow are correctly displayed.
-        checkDayAndMonth(calTomorrow, calTomorrow);
-        checkRecordingInList(10, 30, 10, 45);
-        checkRecordingNotInList(11, 50, 11, 55);
+        // Check that the month and recordings of today are correctly displayed.
+        checkDayAndMonth(calToday, calToday);
+        checkRecordingInList(11, 50, 11, 55);
 
         // Change the month and click on a date.
         onView(withId(R.id.compactcalendar_view)).perform(swipeLeft());

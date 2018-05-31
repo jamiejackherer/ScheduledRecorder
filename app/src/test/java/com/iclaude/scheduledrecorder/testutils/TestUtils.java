@@ -1,4 +1,4 @@
-package com.iclaude.scheduledrecorder;
+package com.iclaude.scheduledrecorder.testutils;
 
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleOwner;

@@ -7,9 +7,9 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 
 import com.google.common.collect.Lists;
-import com.iclaude.scheduledrecorder.LiveDataTestUtil;
+import com.iclaude.scheduledrecorder.testutils.LiveDataTestUtil;
 import com.iclaude.scheduledrecorder.R;
-import com.iclaude.scheduledrecorder.TestUtils;
+import com.iclaude.scheduledrecorder.testutils.TestUtils;
 import com.iclaude.scheduledrecorder.database.Recording;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface;

@@ -129,7 +129,7 @@ public class ScheduledRecordingService extends Service implements Handler.Callba
     }
 
     // Delete expired scheduled recordings from database.
-    private void deleteOldRecordingsAndScheduleNext() {
+    protected void deleteOldRecordingsAndScheduleNext() {
         recordingsRepository.deleteOldScheduledRecordings(System.currentTimeMillis() - 1000*60*5, new RecordingsRepositoryInterface.OperationResult() {
             @Override
             public void onSuccess() {

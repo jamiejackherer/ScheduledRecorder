@@ -6,15 +6,15 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 
-import com.iclaude.scheduledrecorder.LiveDataTestUtil;
+import com.google.common.collect.Lists;
+import com.iclaude.scheduledrecorder.testutils.LiveDataTestUtil;
 import com.iclaude.scheduledrecorder.R;
-import com.iclaude.scheduledrecorder.TestUtils;
+import com.iclaude.scheduledrecorder.testutils.TestUtils;
 import com.iclaude.scheduledrecorder.database.RecordingsRepository;
 import com.iclaude.scheduledrecorder.database.RecordingsRepositoryInterface;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
 import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsViewModel;
 
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -79,14 +79,6 @@ public class ScheduledRecordingsViewModelTest {
         Observer<ScheduledRecording> observer = mock(Observer.class);
         viewModel.getEditCommand().observe(TestUtils.TEST_OBSERVER, observer);
         viewModel.editScheduledRecording(SCHEDULED_RECORDING);
-        verify(observer).onChanged(SCHEDULED_RECORDING);
-    }
-
-    @Test
-    public void testLongClickItem() {
-        Observer<ScheduledRecording> observer = mock(Observer.class);
-        viewModel.getLongClickItemEvent().observe(TestUtils.TEST_OBSERVER, observer);
-        viewModel.showLongClickDialogOptions(SCHEDULED_RECORDING);
         verify(observer).onChanged(SCHEDULED_RECORDING);
     }
 

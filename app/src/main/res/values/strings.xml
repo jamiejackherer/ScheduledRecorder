@@ -103,5 +103,6 @@
     <string name="info_details_content">This app is open source. The app implements (or at least tries to...) the MVVM pattern with clean architecture using Android Data Binding Library and architecture components (Room, ViewModel, LiveData).</string>
     <string name="info_github_title">GitHub repository</string>
     <string name="info_github_link">https://github.com/iClaude/ScheduledRecorder</string>
+    <string name="record_elapsed">elapsed:</string>
 
 </resources>

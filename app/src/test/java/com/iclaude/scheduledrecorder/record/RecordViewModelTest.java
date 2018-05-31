@@ -9,7 +9,7 @@ import android.content.ServiceConnection;
 
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.RecordingService;
-import com.iclaude.scheduledrecorder.TestUtils;
+import com.iclaude.scheduledrecorder.testutils.TestUtils;
 import com.iclaude.scheduledrecorder.ui.fragments.record.RecordViewModel;
 
 import org.junit.Before;

@@ -58,6 +58,7 @@
     <string name="default_file_name">myrec</string>
     <string name="record_prompt">Premi per registrare</string>
     <string name="record_in_progress">Registrazione in corso…</string>
+    <string name="record_elapsed">tempo:</string>
 
     <string name="send_to">Invia a</string>
 

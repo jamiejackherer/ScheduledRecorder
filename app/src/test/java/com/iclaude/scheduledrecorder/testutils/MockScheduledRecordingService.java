@@ -1,12 +1,10 @@
-/*
- * Year: 2017. This class was added by iClaude.
- */
-
-package com.iclaude.scheduledrecorder;
+package com.iclaude.scheduledrecorder.testutils;
 
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
+
+import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 
 /**
  * Created by iClaude on 26/07/2017.
@@ -27,10 +25,6 @@ public class MockScheduledRecordingService extends ScheduledRecordingService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         onStartCommandCalls++; // just for testing
-
-        // Is this a wakeful Service? In this case we have to release the wake-lock at the end.
-        wakeful = intent.getBooleanExtra(EXTRA_WAKEFUL, false);
-        startIntent = intent;
 
         resetAlarmManager(); // cancel all pending alarms
         scheduleNextRecording();

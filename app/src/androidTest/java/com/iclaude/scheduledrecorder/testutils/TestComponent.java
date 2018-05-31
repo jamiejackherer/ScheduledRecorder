@@ -1,5 +1,6 @@
 package com.iclaude.scheduledrecorder.testutils;
 
+import com.iclaude.scheduledrecorder.RecordingServiceTest;
 import com.iclaude.scheduledrecorder.espresso.EspressoRecordFragment;
 import com.iclaude.scheduledrecorder.espresso.EspressoScheduledRecordingDetailsActivity;
 import com.iclaude.scheduledrecorder.espresso.EspressoScheduledRecordingsFragment;
@@ -22,4 +23,6 @@ public interface TestComponent extends AppComponent {
     void inject(EspressoScheduledRecordingDetailsActivity activity);
 
     void inject(EspressoScheduledRecordingsFragment fragment);
+
+    void inject(RecordingServiceTest recordingServiceTest);
 }

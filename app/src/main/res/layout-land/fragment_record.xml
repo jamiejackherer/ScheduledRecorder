@@ -34,33 +34,18 @@
         <TextView
             android:id="@+id/tvChronometer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="53dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-light"
             android:text="@{Utils.formatSecondsElapsedForChronometer(viewModel.secondsElapsed)}"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/filerecord_chrono_textsize"
-            app:layout_constraintBottom_toBottomOf="@+id/recordProgressBar"
-            app:layout_constraintEnd_toEndOf="@+id/recordProgressBar"
-            app:layout_constraintStart_toStartOf="@+id/recordProgressBar"
-            app:layout_constraintTop_toTopOf="@+id/recordProgressBar"
-            tools:text="00:00" />
-
-        <ProgressBar
-            android:id="@+id/recordProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="@dimen/filerecord_chrono_size"
-            android:layout_height="@dimen/filerecord_chrono_size"
-            android:layout_marginEnd="@dimen/default_horizontal_margin"
-            android:layout_marginStart="@dimen/default_horizontal_margin"
-            android:layout_marginTop="@dimen/expanded_vertical_margin"
-            android:background="@drawable/record_progress_bar_background"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@drawable/record_progress_bar"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintHorizontal_bias="0.466"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textView15"
+            tools:text="00:00" />
 
         <Button
             android:id="@+id/btnPause"
@@ -98,8 +83,8 @@
             android:id="@+id/audio_view"
             android:layout_width="0dp"
             android:layout_height="144dp"
-            android:layout_marginEnd="@dimen/expanded_horizontal_margin"
-            android:layout_marginStart="@dimen/expanded_horizontal_margin"
+            android:layout_marginEnd="@dimen/default_horizontal_margin"
+            android:layout_marginStart="@dimen/default_horizontal_margin"
             android:layout_marginTop="@dimen/expanded_vertical_margin"
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -112,6 +97,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.4" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/expanded_vertical_margin"
+            android:text="@string/record_elapsed"
+            app:layout_constraintEnd_toEndOf="@+id/tvChronometer"
+            app:layout_constraintStart_toStartOf="@+id/tvChronometer"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

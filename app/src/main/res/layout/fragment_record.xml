@@ -35,30 +35,15 @@
             android:id="@+id/tvChronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_horizontal_margin"
+            android:layout_marginTop="@dimen/expanded_vertical_margin"
             android:fontFamily="sans-serif-light"
             android:text="@{Utils.formatSecondsElapsedForChronometer(viewModel.secondsElapsed)}"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/filerecord_chrono_textsize"
-            app:layout_constraintBottom_toBottomOf="@+id/recordProgressBar"
-            app:layout_constraintLeft_toLeftOf="@+id/recordProgressBar"
-            app:layout_constraintRight_toRightOf="@+id/recordProgressBar"
-            app:layout_constraintTop_toTopOf="@+id/recordProgressBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="00:00" />
-
-        <ProgressBar
-            android:id="@+id/recordProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="@dimen/filerecord_chrono_size"
-            android:layout_height="@dimen/filerecord_chrono_size"
-            android:layout_marginTop="28dp"
-            android:background="@drawable/record_progress_bar_background"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@drawable/record_progress_bar"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btnPause"
@@ -96,13 +81,26 @@
             android:id="@+id/audio_view"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginBottom="@dimen/default_vertical_margin"
-            android:layout_marginEnd="@dimen/expanded_horizontal_margin"
-            android:layout_marginStart="@dimen/expanded_horizontal_margin"
+            android:layout_marginEnd="@dimen/default_horizontal_margin"
+            android:layout_marginStart="@dimen/default_horizontal_margin"
+            android:layout_marginTop="@dimen/expanded_vertical_margin"
             android:padding="@dimen/default_horizontal_margin"
-            app:layout_constraintBottom_toTopOf="@+id/recording_status_text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvChronometer" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/expanded_horizontal_margin"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/secondary_text"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvChronometer"
+            app:layout_constraintEnd_toStartOf="@+id/tvChronometer"
+            app:layout_constraintTop_toTopOf="@+id/tvChronometer"
+            android:text="@string/record_elapsed" />
 
     </android.support.constraint.ConstraintLayout>
 

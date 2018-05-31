@@ -286,20 +286,4 @@ public class RecordingsRepository implements RecordingsRepositoryInterface {
         appExecutors.diskIO().execute(runnable);
     }
 
-    @Override
-    public void getScheduledRecordingsBetween(long start, long end, GetScheduledRecordingsCallback callback) {
-        Runnable runnable = () -> {
-            final List<ScheduledRecording> recordings = recordingsDao.getScheduledRecordingsBetween(start, end);
-
-            appExecutors.mainThread().execute(() -> {
-                if (recordings != null) {
-                    callback.onSuccess(recordings);
-                } else {
-                    callback.onFailure();
-                }
-            });
-        };
-
-        appExecutors.diskIO().execute(runnable);
-    }
 }

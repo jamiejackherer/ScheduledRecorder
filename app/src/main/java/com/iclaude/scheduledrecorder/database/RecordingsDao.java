@@ -57,7 +57,7 @@ public interface RecordingsDao {
     int deleteOldScheduledRecordings(long time);
 
     @Query("SELECT * FROM scheduled_recordings WHERE id = :id")
-    ScheduledRecording getScheduledRecordingById(int id);
+    ScheduledRecording getScheduledRecordingById(long id);
 
     @Query("SELECT * FROM scheduled_recordings")
     LiveData<List<ScheduledRecording>> getAllScheduledRecordings();
@@ -67,11 +67,7 @@ public interface RecordingsDao {
     ScheduledRecording getNextScheduledRecording();
 
     @Query("SELECT COUNT(*) FROM scheduled_recordings WHERE ((:start >= start_time AND :start <= end_time) OR (:end >= start_time AND :end <= end_time) OR (:start < start_time AND :end > end_time)) AND :exceptId != id")
-    int getNumRecordingsAlreadyScheduled(long start, long end, int exceptId);
-
-    // Returns all scheduled recordings whose field start is between start and end.
-    @Query("SELECT * FROM scheduled_recordings WHERE start_time BETWEEN :start AND :end")
-    List<ScheduledRecording> getScheduledRecordingsBetween(long start, long end);
+    int getNumRecordingsAlreadyScheduled(long start, long end, long exceptId);
 
     @Query("SELECT COUNT(*) FROM scheduled_recordings")
     int getScheduledRecordingsCount();

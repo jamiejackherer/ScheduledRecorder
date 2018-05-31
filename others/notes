@@ -1,16 +1,15 @@
-generale:
-refactoring dell’app usando gli architecture components, mvvm pattern, data binding e test
-refactoring della UI
-pubblicazione nel play store
+Follow Field Naming Conventions
+Non-public, non-static field names start with m.
+Static field names start with s.
+Other fields start with a lower case letter.
+Public static final fields (constants) are ALL_CAPS_WITH_UNDERSCORES.
+For example:
 
-
-audio view:
-- quando l'app va in background (aprendo un'altra app) e ritornando la scala dei secondi è sbagliata
-  (vedi metodo startRecording che aggiorni anche la scala)
-- migliorare precisione scala secondi quando si ritorno al record fragment
-- provare buffer di amplitudes per migliorare effetto grafico
-
-
-problem fix:
-1) cannot resolve symbol theme in styles.xml: chiudere progetto; eliminarlo dalla
-   lista di sx; open existing as project
+public class MyClass {
+    public static final int SOME_CONSTANT = 42;
+    public int publicField;
+    private static MyClass sSingleton;
+    int mPackagePrivate;
+    private int mPrivate;
+    protected int mProtected;
+}

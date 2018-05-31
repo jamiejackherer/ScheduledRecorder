@@ -187,9 +187,10 @@ public class RecordingService extends Service {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mRecorder.setOutputFile(mFilePath);
-        mRecorder.setMaxDuration(duration); // if this is a scheduled recording, set the max duration, after which the Service is stopped
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mRecorder.setOutputFile(mFilePath);
+
+        mRecorder.setMaxDuration(duration); // if this is a scheduled recording, set the max duration, after which the Service is stopped
         mRecorder.setAudioChannels(1);
         if (MySharedPreferences.getPrefHighQuality(this)) {
             mRecorder.setAudioSamplingRate(44100);
@@ -221,6 +222,7 @@ public class RecordingService extends Service {
     private void setFileNameAndPath() {
         mFileName = "myrec" + System.currentTimeMillis();
         mFilePath = Utils.getDirectoryPath(this) + "/" + mFileName;
+        Log.d(TAG, "mFilePath =  " + mFilePath);
     }
 
     private void startTimer() {

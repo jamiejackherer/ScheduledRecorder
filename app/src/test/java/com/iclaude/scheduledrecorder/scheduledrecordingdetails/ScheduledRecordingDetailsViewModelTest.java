@@ -310,8 +310,9 @@ public class ScheduledRecordingDetailsViewModelTest {
 
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(scheduledRecording.getStart());
-        cal.roll(Calendar.HOUR, -2);
-        int hour = cal.get(Calendar.HOUR);
+        cal.add(Calendar.HOUR_OF_DAY, -2);
+        cal.add(Calendar.HOUR_OF_DAY, -2);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
 
         viewModel.setTime(TIME_END, hour, minute);

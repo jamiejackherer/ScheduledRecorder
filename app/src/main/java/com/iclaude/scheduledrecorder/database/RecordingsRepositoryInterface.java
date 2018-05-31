@@ -78,5 +78,4 @@ public interface RecordingsRepositoryInterface {
 
     void getNumRecordingsAlreadyScheduled(long start, long end, int exceptId, GetRecordingsCountCallback callback);
 
-    void getScheduledRecordingsBetween(long start, long end, GetScheduledRecordingsCallback callback);
 }

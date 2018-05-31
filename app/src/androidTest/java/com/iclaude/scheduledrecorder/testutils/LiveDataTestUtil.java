@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
  */
 
-package com.iclaude.scheduledrecorder;
+package com.iclaude.scheduledrecorder.testutils;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
