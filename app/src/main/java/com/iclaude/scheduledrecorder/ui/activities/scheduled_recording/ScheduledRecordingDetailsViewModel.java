@@ -62,6 +62,7 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
     public final ObservableBoolean timeEndCorrectObservable = new ObservableBoolean();
     public final ObservableBoolean timesCorrectObservable = new ObservableBoolean();
     public final ObservableField<String> errorMsgObservable = new ObservableField<>("");
+    public boolean portrait = true;
 
     private final SingleLiveEvent<Void> loadedCommand = new SingleLiveEvent<>();
     private final SingleLiveEvent<RESULT> saveCommand = new SingleLiveEvent<>();
@@ -79,6 +80,10 @@ public class ScheduledRecordingDetailsViewModel extends AndroidViewModel impleme
     public ScheduledRecordingDetailsViewModel(Application application, RecordingsRepository recordingsRepository) {
         super(application);
         this. recordingsRepository = recordingsRepository;
+    }
+
+    public void setOrientation() {
+        portrait = getApplication().getResources().getBoolean(R.bool.portrait);
     }
 
     public SingleLiveEvent<Void> getLoadedCommand() {

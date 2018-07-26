@@ -164,6 +164,19 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="@string/toast_scheduledrecording_timeerror_past" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_animation_view"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="@{!viewModel.portrait ? View.GONE : (viewModel.errorMsgObservable.length == 0 ? View.VISIBLE : View.GONE)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/tick_reveal" />
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>

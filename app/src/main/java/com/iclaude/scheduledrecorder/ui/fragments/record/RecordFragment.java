@@ -10,13 +10,17 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.databinding.Observable;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableInt;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +28,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieDrawable;
+import com.airbnb.lottie.LottieProperty;
+import com.airbnb.lottie.SimpleColorFilter;
+import com.airbnb.lottie.model.KeyPath;
+import com.airbnb.lottie.value.LottieValueCallback;
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.databinding.FragmentRecordBinding;
 import com.iclaude.scheduledrecorder.utils.PermissionsManager;
@@ -41,6 +51,7 @@ public class RecordFragment extends Fragment {
 
     private RecordViewModel recordViewModel;
     private AudioLevelView audioView;
+    private LottieAnimationView lottieView;
 
     private boolean firstCallback = true;
     private Observable.OnPropertyChangedCallback secsCallback;
@@ -68,6 +79,19 @@ public class RecordFragment extends Fragment {
         recordViewModel.getAmplitudeLive().observe(this, integer ->
                     audioView.addAmplitude(integer));
 
+        recordViewModel.serviceRecording.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                boolean isRecording =  ((ObservableBoolean) sender).get();
+                if(isRecording) {
+                    lottieView.playAnimation();
+                } else {
+                    lottieView.setProgress(0f);
+                    lottieView.pauseAnimation();
+                }
+            }
+        });
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -83,6 +107,16 @@ public class RecordFragment extends Fragment {
         fab.setOnClickListener(v -> checkPermissionsAndRecord());
 
         audioView = rootView.findViewById(R.id.audio_view);
+
+        // Lottie animation view.
+        lottieView = rootView.findViewById(R.id.lottie_animation_view);
+        lottieView.setRepeatCount(LottieDrawable.INFINITE);
+        // change the color to match app's theme
+        int color = ContextCompat.getColor(getActivity(), R.color.primary_light);
+        SimpleColorFilter filter = new SimpleColorFilter(color);
+        KeyPath keyPath = new KeyPath("**");
+        LottieValueCallback<ColorFilter> callback = new LottieValueCallback<ColorFilter>(filter);
+        lottieView.addValueCallback(keyPath, LottieProperty.COLOR_FILTER, callback);
 
         return rootView;
     }
@@ -105,6 +139,10 @@ public class RecordFragment extends Fragment {
             }
         };
         recordViewModel.secondsElapsed.addOnPropertyChangedCallback(secsCallback);
+
+        if(recordViewModel.serviceRecording.get()) {
+            lottieView.playAnimation();
+        }
     }
 
     @Override
@@ -112,6 +150,7 @@ public class RecordFragment extends Fragment {
         super.onPause();
 
         recordViewModel.secondsElapsed.removeOnPropertyChangedCallback(secsCallback);
+        lottieView.pauseAnimation();
     }
 
     // Check dangerous permissions for Android Marshmallow+.

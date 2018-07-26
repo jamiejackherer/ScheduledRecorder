@@ -5,8 +5,10 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieDrawable;
+import com.airbnb.lottie.LottieProperty;
+import com.airbnb.lottie.SimpleColorFilter;
+import com.airbnb.lottie.model.KeyPath;
+import com.airbnb.lottie.value.LottieValueCallback;
 import com.iclaude.scheduledrecorder.R;
 import com.iclaude.scheduledrecorder.ScheduledRecordingService;
 import com.iclaude.scheduledrecorder.database.ScheduledRecording;
@@ -49,6 +57,9 @@ public class ScheduledRecordingDetailsActivity extends AppCompatActivity impleme
     private boolean dataLoaded;
     private OPERATION operation;
 
+    private LottieAnimationView lottieView;
+
+
     // Edit (existing recording with id).
     public static Intent makeIntent(Context context, int id) {
         Intent intent = new Intent(context, ScheduledRecordingDetailsActivity.class);
@@ -73,6 +84,7 @@ public class ScheduledRecordingDetailsActivity extends AppCompatActivity impleme
         // ViewModel and data binding.
         viewModel = ViewModelProviders.of(this)
                 .get(ScheduledRecordingDetailsViewModel.class);
+        viewModel.setOrientation();
         ActivityScheduledRecordingDetailsBinding binding = DataBindingUtil
                 .setContentView(this, R.layout.activity_scheduled_recording_details);
         binding.setViewModel(viewModel);
@@ -91,6 +103,16 @@ public class ScheduledRecordingDetailsActivity extends AppCompatActivity impleme
             ab.setDisplayShowTitleEnabled(false); // hide the title
             ab.setDisplayHomeAsUpEnabled(true);
         }
+
+        // Lottie animation view.
+        lottieView = findViewById(R.id.lottie_animation_view);
+        lottieView.setRepeatCount(0);
+        // change the color to match app's theme
+        int color = ContextCompat.getColor(this, R.color.primary_light);
+        SimpleColorFilter filter = new SimpleColorFilter(color);
+        KeyPath keyPath = new KeyPath("**");
+        LottieValueCallback<ColorFilter> callback = new LottieValueCallback<ColorFilter>(filter);
+        lottieView.addValueCallback(keyPath, LottieProperty.COLOR_FILTER, callback);
     }
 
     @Override
@@ -143,12 +165,14 @@ public class ScheduledRecordingDetailsActivity extends AppCompatActivity impleme
     public void onDateSet(long viewId, int year, int month, int day) {
         DATE_TYPE dateType = viewId == R.id.tvDateStart ? DATE_START : DATE_END;
         viewModel.setDate(dateType, year, month, day);
+        lottieView.playAnimation();
     }
 
     @Override
     public void onTimeSet(long viewId, int hour, int minute) {
         TIME_TYPE timeType = viewId == R.id.tvTimeStart ? TIME_TYPE.TIME_START : TIME_TYPE.TIME_END;
         viewModel.setTime(timeType, hour, minute);
+        lottieView.playAnimation();
     }
 
     @Override

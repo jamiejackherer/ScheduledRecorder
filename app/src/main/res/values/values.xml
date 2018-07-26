@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="fileviewer_num_columns">1</integer>
+    <bool name="portrait">true</bool>
 
 </resources>

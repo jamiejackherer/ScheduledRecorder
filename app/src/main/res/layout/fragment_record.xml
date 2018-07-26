@@ -102,6 +102,17 @@
             app:layout_constraintTop_toTopOf="@+id/tvChronometer"
             android:text="@string/record_elapsed" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_animation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/audio_view"
+            app:lottie_autoPlay="false"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/dotted_loader" />
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>
