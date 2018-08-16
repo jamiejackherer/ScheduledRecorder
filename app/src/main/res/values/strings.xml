@@ -105,4 +105,12 @@
     <string name="info_github_link">https://github.com/iClaude/ScheduledRecorder</string>
     <string name="record_elapsed">elapsed:</string>
 
+    <!-- Facebook and Twitter authentication. -->
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">313261872585168</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb313261872585168</string>
+    <!-- Twitter consumer key and secret -->
+    <string name="twitter_consumer_key" translatable="false">R2yNb73uBQU01PxNCvOBoIKVJ</string>
+    <string name="twitter_consumer_secret" translatable="false">htmPNo46KxjJXAXiUQLGVExr0PgRmLYH8nfoytyxtyi6w1O1P0</string>
+
 </resources>

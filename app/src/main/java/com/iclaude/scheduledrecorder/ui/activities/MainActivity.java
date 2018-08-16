@@ -28,6 +28,9 @@ import com.iclaude.scheduledrecorder.ui.fragments.record.RecordFragment;
 import com.iclaude.scheduledrecorder.ui.fragments.record.RecordViewModel;
 import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsFragment;
 
+/*
+    TODO: add SHA1 (release) to project settings on Firebase website
+ */
 
 public class MainActivity extends AppCompatActivity {
 
