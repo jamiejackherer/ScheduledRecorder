@@ -76,6 +76,9 @@
 
     <string name="new_message_notification_title_template">New message: %1$s</string>
 
+    <string name="remote_no_signin">You are not signed-in. Please sign in and register your devices to start remote recording.</string>
+    <string name="remote_sign_in_button">Sign-in</string>
+
     <!-- ScheduledRecordingDetailsActivity -->
     <string name="no_data">no data...</string>
 

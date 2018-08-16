@@ -78,6 +78,9 @@
     <string name="audioview_recording">registrazione...</string>
     <string name="audioview_waiting">attesa...</string>
 
+    <string name="remote_no_signin">Non sei attualmente loggato. Loggati e registra i tuoi dispositivi per usare la registrazione da remoto.</string>
+    <string name="remote_sign_in_button">Registrati</string>
+
     <!-- ScheduledRecordingDetailsActivity -->
     <string name="no_data">dati non disponibili</string>
 
