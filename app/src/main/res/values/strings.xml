@@ -9,6 +9,7 @@
     <string name="tab_title_record">Record</string>
     <string name="tab_title_saved_recordings">Files</string>
     <string name="tab_title_scheduled_recordings">Schedule</string>
+    <string name="tab_title_remote">Remote</string>
 
     <!-- Toasts -->
     <string name="toast_recording_start">Recording started</string>
@@ -112,5 +113,8 @@
     <!-- Twitter consumer key and secret -->
     <string name="twitter_consumer_key" translatable="false">R2yNb73uBQU01PxNCvOBoIKVJ</string>
     <string name="twitter_consumer_secret" translatable="false">htmPNo46KxjJXAXiUQLGVExr0PgRmLYH8nfoytyxtyi6w1O1P0</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

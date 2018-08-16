@@ -9,6 +9,7 @@
     <string name="tab_title_record">Registra</string>
     <string name="tab_title_saved_recordings">File</string>
     <string name="tab_title_scheduled_recordings">Pianifica</string>
+    <string name="tab_title_remote">Remoto</string>
 
 
     <!-- Toasts -->

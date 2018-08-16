@@ -26,6 +26,7 @@ import com.iclaude.scheduledrecorder.RecordingService;
 import com.iclaude.scheduledrecorder.ui.fragments.fileviewer.FileViewerFragment;
 import com.iclaude.scheduledrecorder.ui.fragments.record.RecordFragment;
 import com.iclaude.scheduledrecorder.ui.fragments.record.RecordViewModel;
+import com.iclaude.scheduledrecorder.ui.fragments.remote.RemoteFragment;
 import com.iclaude.scheduledrecorder.ui.fragments.scheduledrecordings.ScheduledRecordingsFragment;
 
 /*
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
     class MyAdapter extends FragmentPagerAdapter {
         private final String[] titles = {getString(R.string.tab_title_record),
                 getString(R.string.tab_title_saved_recordings),
-                getString(R.string.tab_title_scheduled_recordings)};
+                getString(R.string.tab_title_scheduled_recordings),
+                getString(R.string.tab_title_remote)};
 
         MyAdapter(FragmentManager fm) {
             super(fm);
@@ -96,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
                 case 2: {
                     return ScheduledRecordingsFragment.newInstance(position);
                 }
+                case 3: {
+                    return RemoteFragment.newInstance(position);
+                }
+
             }
             return null;
         }
