@@ -17,7 +17,6 @@
         android:layout_height="match_parent"
         tools:ignore="UnusedAttribute">
 
-
         <TextView
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
@@ -27,10 +26,11 @@
             android:layout_marginTop="@dimen/default_vertical_margin"
             android:text="@string/remote_no_signin"
             android:textAlignment="center"
+            android:textColor="@color/red"
+            android:visibility="@{viewModel.userConnectedObs ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="@{viewModel.userConnected ? View.GONE : View.VISIBLE}" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/button2"
@@ -41,7 +41,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView16"
-            android:visibility="@{viewModel.userConnected ? View.GONE : View.VISIBLE}" />
+            android:visibility="@{viewModel.userConnectedObs ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> viewModel.doLogin()}" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_vertical_margin"
+            tools:text="iClaude logged-in"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{viewModel.userConnectedObs ? View.VISIBLE : View.GONE}"
+            android:text="@{viewModel.firebaseUserObs.get()}" />
 
     </android.support.constraint.ConstraintLayout>
 
